@@ -17,6 +17,7 @@ class Promotion(models.Model):
 class Product(models.Model):
     """ Create Product model and associate many-to-one relation with collection model """
     title = models.CharField(max_length=255)
+    slug = models.SlugField(default="-")
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
