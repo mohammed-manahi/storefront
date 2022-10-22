@@ -1,0 +1,25 @@
+<h1> Query Sets </h1>
+<h3> Recent Products </h3>
+<ul>
+    {% for recent_product in recent_products %}
+        <li> {{ recent_product.title }}</li>
+    {% endfor %}
+</ul>
+<h3> Products that their prices are greater than 20 and their category is beauty:</h3>
+<ul>
+    {% for filtered_product in filtered_products %}
+        <li> {{ filtered_product.title }}</li>
+    {% endfor %}
+</ul>
+<h3> Products that their price range between 50 and 60: </h3>
+<ul>
+    {% for price_range in price_range_set %}
+        <li> {{ price_range.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Products which are either less than 10 in the inventory or their prices are greater than 20:</h3>
+<ul>
+    {% for product_q_object in products_q_objects %}
+        <li> {{ product_q_object.title }}</li>
+    {% endfor %}
+</ul>
