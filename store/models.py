@@ -4,14 +4,14 @@ from django.db import models
 class Collection(models.Model):
     """ Create Collection model """
     title = models.CharField(max_length=256)
+    # Solve circular dependency using plus sign to avoid creating the reverse relationship
+    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
 
 class Promotion(models.Model):
     """ Create Promotion model and associate many-to-many relation with product model """
     description = models.CharField(max_length=256)
     discount = models.FloatField()
-    # solve circular dependency using plus sign to avoid creating the reverse relationship
-    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
 
 class Product(models.Model):
@@ -19,12 +19,12 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(default="-")
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     # Set on-delete to protect in order to prevent deleting all the products in the collection
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
-    # use plural "promotions" to indicate many-to-many- relation with promotion model
+    # Use plural "promotions" to indicate many-to-many- relation with promotion model
     promotions = models.ManyToManyField(Promotion, related_name="products")
 
 
@@ -51,7 +51,7 @@ class Order(models.Model):
     # Set choices for payment status and use pending status as default
     PAYMENT_STATUS_CHOICES = [(PAYMENT_STATUS_PENDING, "Pending"), (PAYMENT_STATUS_COMPLETE, "Complete"),
                               (PAYMENT_STATUS_FAILED, "Failed")]
-    created_at = models.DateTimeField(auto_now=True)
+    placed_at = models.DateTimeField(auto_now=True)
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     # Set on-delete to protect in order to prevent deleting all the orders when customer is deleted
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -68,7 +68,7 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     """ Create Cart model """
-    # auto_now_add populates only on creation
+    # Auto_now_add populates only on creation
     created_at = models.DateTimeField(auto_now_add=True)
 
 
