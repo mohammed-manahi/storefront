@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from django.db.models import Q, F
-from store.models import Product, OrderItem, Collection, Promotion
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
+from django.db.models.aggregates import Avg, Max, Min, Count
+from store.models import Product, OrderItem, Collection, Promotion, Customer
+from tags.models import TaggedItem
 
 
 def query_sets(request):
@@ -32,11 +35,31 @@ def query_sets(request):
     # A query set to get last five orders with their customers and product titles
     last_orders = OrderItem.objects.select_related("product").select_related("order").filter(
         order__payment_status="C").order_by("-order__placed_at")[:5]
+    # A query set to get min price in beauty category using aggregate
+    min_price_in_beauty_collection = Product.objects.filter(collection__title="Beauty").aggregate(
+        min_price=Min("unit_price"))
+    # A query set to annotate customer full name using concatenation
+    customer_full_names = Customer.objects.annotate(full_name=Func(F("first_name"), Value(' '), F("last_name"),
+                                                                   function="CONCAT"))[:5]
+    # A query set to count the number of orders for each customer
+    customer_orders = Customer.objects.annotate(orders_count=Count('order'))[:5]
+    # ِA query set to apply discount using expression wrapper
+    discount = ExpressionWrapper(F("unit_price") * 0.8, output_field=DecimalField())
+    discounted_price = Product.objects.annotate(discount=discount)
+    # A query set for generic relation that uses content type for the tag(s) of a product with id 1
+    content_type = ContentType.objects.get_for_model(Product)
+    product_tags = TaggedItem.objects.select_related("tag").filter(content_type=content_type, object_id=1)
+    # A query set to achieve the generic relation above using custom manager defined in tags app's models
+    TaggedItem.objects.get_tags_for(Product, 1)
+
     template = "query_set.html"
     context = {"products": products, "recent_products": recent_products, "filtered_products": filtered_products,
                "price_range_set": price_range_set, "products_q_objects": products_q_objects,
                "product_count": product_count, "products_f_objects": products_f_objects,
                "highest_products": highest_products, "products_certain_fields": products_certain_fields,
                "ordered_products": ordered_products, "product_categories": product_categories,
-               "product_promotions": product_promotions, "last_orders": last_orders}
+               "product_promotions": product_promotions, "last_orders": last_orders,
+               "min_price_in_beauty_collection": min_price_in_beauty_collection,
+               "customer_full_names": customer_full_names, "customer_orders": customer_orders,
+               "product_tags": product_tags}
     return render(request, template, context)

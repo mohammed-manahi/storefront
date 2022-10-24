@@ -70,5 +70,17 @@
             | {{ last_order.order.placed_at }}</li>
     {% endfor %}
 </ul>
+<h3> Customer full names:</h3>
+<ul>
+    {% for customer_name in customer_full_names %}
+        <li>{{ customer_name.full_name }}</li>
+    {% endfor %}
+</ul>
+<h3> Top customers who made orders:</h3>
+<ul>
+    {% for customer_order in customer_orders %}
+        <li>{{ customer_order.first_name }}</li>
+    {% endfor %}
+</ul>
 </body>
 </html>
