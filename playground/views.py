@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Avg, Max, Min, Count
-from store.models import Product, OrderItem, Collection, Promotion, Customer
+from django.db import transaction
+from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
 
 
@@ -51,6 +52,39 @@ def query_sets(request):
     product_tags = TaggedItem.objects.select_related("tag").filter(content_type=content_type, object_id=1)
     # A query set to achieve the generic relation above using custom manager defined in tags app's models
     TaggedItem.objects.get_tags_for(Product, 1)
+    # Create a new collection object
+    # collection = Collection()
+    # collection.title = "Video Games"
+    # collection.featured_product = Product(pk=35)
+    # collection.id
+    # collection.save()
+    # # Create a new collection object using the compact way
+    # collection = Collection.objects.create(title="Electronics", id=31)
+    # # Update a collection object
+    # collection = Collection(pk=10)
+    # collection.title = "Games"
+    # collection.featured_product = None
+    # collection.save()
+    # # Update a collection object certain fields
+    # collection = Collection.objects.get(pk=10)
+    # collection.title = "PC Games"
+    # # Update a collection object using the compact way
+    # collection = Collection.objects.filter(pk=10).update(title="E-Sports")
+    # # Delete a collection object
+    # collection = Collection.objects.filter(pk=11).delete()
+    # Transaction ensures that all changes are saved together, so for example order and item should be saved together
+    # with transaction.atomic():
+    #     order = Order()
+    #     order.id = 1001
+    #     order.customer_id = 1
+    #     order.save()
+    #     item = OrderItem()
+    #     item.order = order
+    #     item.quantity = 1
+    #     item.product_id = 1
+    #     item.unit_price = 1
+    # A query set to get all products using raw sql commands
+    product_raw_query = Product.objects.raw("SELECT * FROM store_product")
 
     template = "query_set.html"
     context = {"products": products, "recent_products": recent_products, "filtered_products": filtered_products,
