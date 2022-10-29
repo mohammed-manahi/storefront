@@ -7,6 +7,14 @@ class Collection(models.Model):
     # Solve circular dependency using plus sign to avoid creating the reverse relationship
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
+    # String representation for the collection model
+    def __str__(self):
+        return self.title
+
+    # Meta inner class for customizing items in django admin ui
+    class Meta():
+        ordering = ["title"]
+
 
 class Promotion(models.Model):
     """ Create Promotion model and associate many-to-many relation with product model """
@@ -27,6 +35,14 @@ class Product(models.Model):
     # Use plural "promotions" to indicate many-to-many- relation with promotion model
     promotions = models.ManyToManyField(Promotion, related_name="products")
 
+    # String representation for the product model
+    def __str__(self):
+        return self.title
+
+    # Meta inner class for customizing items in django admin ui
+    class Meta():
+        ordering = ["title"]
+
 
 class Customer(models.Model):
     """ Create Customer model """
@@ -41,6 +57,14 @@ class Customer(models.Model):
     phone = models.CharField(max_length=32)
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+
+    # String representation for the customer model
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    # Meta inner class for customizing items in django admin ui
+    class Meta():
+        ordering = ["first_name", "last_name"]
 
 
 class Order(models.Model):
