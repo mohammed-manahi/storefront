@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class Collection(models.Model):
@@ -27,13 +28,14 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    # Use django min value validator to ensure the price is larger than or equal to 1
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(1)])
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     # Set on-delete to protect in order to prevent deleting all the products in the collection
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     # Use plural "promotions" to indicate many-to-many- relation with promotion model
-    promotions = models.ManyToManyField(Promotion, related_name="products")
+    promotions = models.ManyToManyField(Promotion, related_name="products", blank=True)
 
     # String representation for the product model
     def __str__(self):

@@ -14,6 +14,9 @@ class Tag(models.Model):
     """ Create Tag model """
     label = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.label
+
 
 class TaggedItem(models.Model):
     """ Create TagItem model which applies generic tag using content_type """

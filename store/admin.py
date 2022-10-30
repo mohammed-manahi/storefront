@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
-
 from store import models
+
 
 
 class ProductInventoryFilter(admin.SimpleListFilter):
@@ -38,6 +38,9 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ["title"]}
     # Add auto-complete field to the collection, note search field must be added to collection admin model
     autocomplete_fields = ["collection"]
+
+    # Add inline admin model from tagged item model in tags app using generic relation
+    # inlines = [TagInline]
 
     # Define computed component for inventory status and apply custom display ordering decorator
     @admin.display(ordering="inventory")
@@ -78,13 +81,21 @@ class CustomerAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(orders_count=Count('order'))
 
 
+class OrderItemInline(admin.TabularInline):
+    """ Inline admin model for order admin """
+    autocomplete_fields = ["product"]
+    model = models.OrderItem
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     """ Order model registration for django admin """
     list_select_related = ["customer"]
     list_display = ["customer_name", "placed_at"]
     ordering = ["-placed_at"]
-    autocomplete_fields = ["customer"]
+    autocomplete_fields = ["customer", ]
+    # Add inline admin model
+    inlines = [OrderItemInline]
 
     # Get the customer name from the related object customer model
     def customer_name(self, order):
@@ -97,6 +108,7 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = ["title", "products_count", "featured_product"]
     ordering = ["title"]
     search_fields = ["title"]
+
     # Display products count's links and apply custom display ordering decorator
     @admin.display(ordering="products_count")
     def products_count(self, collection):

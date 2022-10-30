@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "playground",
     "store",
     "tags",
+    # The purpose of this app is to ensure decoupling and independence
+    "store_custom",
 ]
 
 MIDDLEWARE = [
