@@ -12,15 +12,14 @@ class ProductInventoryFilter(admin.SimpleListFilter):
     parameter_name = "inventory"
 
     def lookups(self, request, model_admin):
-        return [("<10", "Low"), (">10", "OK")]
+        return ("<10", "Low"), (">10", "OK")
 
     def queryset(self, request, queryset):
         if self.value == "<10":
             return queryset.filter(inventory__lt=10)
-        elif self.value == ">10":
+        if self.value == ">10":
             return queryset.filter(inventory__gt=10)
-        else:
-            return queryset.all()
+
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -33,6 +32,8 @@ class ProductAdmin(admin.ModelAdmin):
     # Add search fields with case-insensitive search for product title
     search_fields = ["title__istartswith"]
     list_filter = ["collection", "last_update", ProductInventoryFilter]
+    # Define custom action in products page
+    actions = ["clear_inventory"]
 
     # Define computed component for inventory status and apply custom display ordering decorator
     @admin.display(ordering="inventory")
@@ -45,6 +46,11 @@ class ProductAdmin(admin.ModelAdmin):
     # Get the title from the related object collection model
     def collection_title(self, product):
         return product.collection.title
+
+    # Create custom action in products page
+    def clear_inventory(self, request, queryset):
+        affected_product_count = queryset.update(inventory=0)
+        self.message_user(request, f"{affected_product_count} products were updated successfully!")
 
 
 @admin.register(models.Customer)
