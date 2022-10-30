@@ -25,7 +25,7 @@ class Promotion(models.Model):
 class Product(models.Model):
     """ Create Product model and associate many-to-one relation with collection model """
     title = models.CharField(max_length=255)
-    slug = models.SlugField(default="-")
+    slug = models.SlugField()
     description = models.TextField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
@@ -75,7 +75,7 @@ class Order(models.Model):
     # Set choices for payment status and use pending status as default
     PAYMENT_STATUS_CHOICES = [(PAYMENT_STATUS_PENDING, "Pending"), (PAYMENT_STATUS_COMPLETE, "Complete"),
                               (PAYMENT_STATUS_FAILED, "Failed")]
-    placed_at = models.DateTimeField(auto_now=True)
+    placed_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     # Set on-delete to protect in order to prevent deleting all the orders when customer is deleted
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)

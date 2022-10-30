@@ -34,6 +34,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ["collection", "last_update", ProductInventoryFilter]
     # Define custom action in products page
     actions = ["clear_inventory"]
+    # Prepopulate slug field
+    prepopulated_fields = {"slug": ["title"]}
+    # Add auto-complete field to the collection, note search field must be added to collection admin model
+    autocomplete_fields = ["collection"]
 
     # Define computed component for inventory status and apply custom display ordering decorator
     @admin.display(ordering="inventory")
@@ -80,6 +84,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_select_related = ["customer"]
     list_display = ["customer_name", "placed_at"]
     ordering = ["-placed_at"]
+    autocomplete_fields = ["customer"]
 
     # Get the customer name from the related object customer model
     def customer_name(self, order):
@@ -91,7 +96,7 @@ class CollectionAdmin(admin.ModelAdmin):
     """ Product model registration for django admin """
     list_display = ["title", "products_count", "featured_product"]
     ordering = ["title"]
-
+    search_fields = ["title"]
     # Display products count's links and apply custom display ordering decorator
     @admin.display(ordering="products_count")
     def products_count(self, collection):
