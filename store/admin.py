@@ -6,6 +6,22 @@ from django.utils.html import format_html, urlencode
 from store import models
 
 
+class ProductInventoryFilter(admin.SimpleListFilter):
+    """ Create custom filter for product inventory """
+    title = "inventory"
+    parameter_name = "inventory"
+
+    def lookups(self, request, model_admin):
+        return [("<10", "Low"), (">10", "OK")]
+
+    def queryset(self, request, queryset):
+        if self.value == "<10":
+            return queryset.filter(inventory__lt=10)
+        elif self.value == ">10":
+            return queryset.filter(inventory__gt=10)
+        else:
+            return queryset.all()
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product model registration for django admin """
@@ -14,6 +30,9 @@ class ProductAdmin(admin.ModelAdmin):
     # Eager loading for related objects "collection" to the product model
     list_select_related = ["collection"]
     list_per_page = 20
+    # Add search fields with case-insensitive search for product title
+    search_fields = ["title__istartswith"]
+    list_filter = ["collection", "last_update", ProductInventoryFilter]
 
     # Define computed component for inventory status and apply custom display ordering decorator
     @admin.display(ordering="inventory")
@@ -35,6 +54,8 @@ class CustomerAdmin(admin.ModelAdmin):
     list_editable = ["membership"]
     ordering = ["first_name", "last_name"]
     list_per_page = 20
+    # Add search fields with case-insensitive search for first name and last name
+    search_fields = ["first_name__istartswith", "last_name__istartswith"]
 
     # Display orders count's links and apply custom display ordering decorator
     @admin.display(ordering="orders_count")
