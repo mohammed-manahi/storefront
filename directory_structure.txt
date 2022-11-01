@@ -1,0 +1,97 @@
+storefront
+|   .env
+|   .gitignore
+|   database_design.png
+|   db.sqlite3
+|   directory_structure.txt
+|   manage.py
+|   Pipfile
+|   Pipfile.lock
+|   project_architecture.png
+|   requirments.txt
+|   seeder.sql
+|   
++---.idea
+|   |   .gitignore
+|   |   misc.xml
+|   |   modules.xml
+|   |   storefront.iml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   \---inspectionProfiles
+|           profiles_settings.xml
+|           
++---playground
+|   |   admin.py
+|   |   apps.py
+|   |   models.py
+|   |   tests.py
+|   |   urls.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   +---migrations
+|   |       __init__.py
+|   |       
+|   \---templates
+|           query_set.html
+|           
++---store
+|   |   .gitignore
+|   |   admin.py
+|   |   apps.py
+|   |   models.py
+|   |   tests.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   \---migrations
+|           0001_initial.py
+|           0002_product_slug.py
+|           0003_collection_featured_product.py
+|           0004_remove_promotion_featured_product_and_more.py
+|           0005_rename_price_product_unit_price.py
+|           0006_rename_created_at_order_placed_at.py
+|           0007_alter_collection_options_alter_customer_options_and_more.py
+|           0008_alter_order_placed_at.py
+|           0009_alter_product_unit_price.py
+|           0010_alter_product_promotions.py
+|           __init__.py
+|           
++---storefront
+|   |   asgi.py
+|   |   settings.py
+|   |   urls.py
+|   |   wsgi.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           settings.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           wsgi.cpython-310.pyc
+|           __init__.cpython-310.pyc
+|           
++---store_custom
+|   |   admin.py
+|   |   apps.py
+|   |   models.py
+|   |   tests.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   \---migrations
+|           __init__.py
+|           
+\---tags
+    |   admin.py
+    |   apps.py
+    |   models.py
+    |   tests.py
+    |   views.py
+    |   __init__.py
+    |   
+    \---migrations
+            0001_initial.py
+            __init__.py
+            

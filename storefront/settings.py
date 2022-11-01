@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Add django rest framework
+    "rest_framework",
     "debug_toolbar",
     "playground",
     "store",
