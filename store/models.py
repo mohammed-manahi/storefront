@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 
 class Collection(models.Model):
     """ Create Collection model """
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=255)
     # Solve circular dependency using plus sign to avoid creating the reverse relationship
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
@@ -53,8 +53,8 @@ class Customer(models.Model):
     MEMBERSHIP_GOLD = "G"
     # Set choices for membership and use bronze membership as default
     MEMBERSHIP_CHOICES = [(MEMBERSHIP_BRONZE, "Bronze"), (MEMBERSHIP_SLIVER, "Sliver"), (MEMBERSHIP_GOLD, "Gold")]
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=32)
     birth_date = models.DateField(null=True)
@@ -107,7 +107,7 @@ class CartItem(models.Model):
 
 class Address(models.Model):
     """ Create Address model and associate many-to-one relation with customer model """
-    street = models.CharField(max_length=256)
-    city = models.CharField(max_length=256)
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
     # Set one-to-many relationship with customer where customer can have multiple addresses
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
