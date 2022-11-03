@@ -35,8 +35,13 @@ class CollectionSerializer(serializers.ModelSerializer):
     """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in  model """
     class Meta():
         model = Collection
-        fields = ["id", "title"]
+        fields = ["id", "title", "product_count"]
 
+    # Add custom field to get product count that belong a certain collection
+    product_count = serializers.SerializerMethodField(method_name='get_product_count')
+    
+    def get_product_count(self, collection):
+        return collection.products.count()
 
 class ProductSerializer(serializers.ModelSerializer):
     """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in  model """

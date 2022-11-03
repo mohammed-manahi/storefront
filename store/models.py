@@ -35,7 +35,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     # Set on-delete to protect in order to prevent deleting all the products in the collection
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name="products")
     # Use plural "promotions" to indicate many-to-many- relation with promotion model
     promotions = models.ManyToManyField(
         Promotion, related_name="products", blank=True)
