@@ -9,23 +9,23 @@ from rest_framework import status
 
 @api_view(["GET", "POST"])
 def product_list(request):
-    # Django rest framework serialization
+    # DRF serialization for getting data
     if request.method == "GET":
         products = Product.objects.select_related("collection").all()
         serializer = ProductSerializer(
             products, many=True, context={"request": request})
         return Response(serializer.data)
-    # Django rest framework deserialization
+    # DRF deserialization for posting data
     elif request.method == "POST":
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
-            print(serializer.validated_data)
-            return Response("OK")
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view()
+@api_view(["GET", "PUT", "DELETE"])
 def product_detail(request, pk):
     # Render product detail using the serializer data to json
     # try:
@@ -34,9 +34,26 @@ def product_detail(request, pk):
     #     return Response(product_serializer.data)
     # except Product.DoesNotExist:
     #     return Response(status=status.HTTP_404_NOT_FOUND)
-    product_detail = get_object_or_404(Product, pk=pk)
-    serializer = ProductSerializer(product_detail)
-    return Response(serializer.data)
+    product = get_object_or_404(Product, pk=pk)
+    # DRF serialization for getting data
+    if request.method == "GET":
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    # DRF deserialization for updating data
+    elif request.method == "PUT":
+        serializer = ProductSerializer(instance=product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # DRF deserialization for deleting data
+    elif request.method == "DELETE":
+        if product.orderitems.count() > 0:
+            return Response({"error": "Product is associated with an order item"},
+                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view()

@@ -6,7 +6,8 @@ class Collection(models.Model):
     """ Create Collection model """
     title = models.CharField(max_length=255)
     # Solve circular dependency using plus sign to avoid creating the reverse relationship
-    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
+    featured_product = models.ForeignKey(
+        'Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
     # String representation for the collection model
     def __str__(self):
@@ -29,13 +30,15 @@ class Product(models.Model):
     slug = models.SlugField()
     description = models.TextField()
     # Use django min value validator to ensure the price is larger than or equal to 1
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(1)])
+    unit_price = models.DecimalField(
+        max_digits=6, decimal_places=2, validators=[MinValueValidator(1)])
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     # Set on-delete to protect in order to prevent deleting all the products in the collection
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     # Use plural "promotions" to indicate many-to-many- relation with promotion model
-    promotions = models.ManyToManyField(Promotion, related_name="products", blank=True)
+    promotions = models.ManyToManyField(
+        Promotion, related_name="products", blank=True)
 
     # String representation for the product model
     def __str__(self):
@@ -52,13 +55,15 @@ class Customer(models.Model):
     MEMBERSHIP_SLIVER = "S"
     MEMBERSHIP_GOLD = "G"
     # Set choices for membership and use bronze membership as default
-    MEMBERSHIP_CHOICES = [(MEMBERSHIP_BRONZE, "Bronze"), (MEMBERSHIP_SLIVER, "Sliver"), (MEMBERSHIP_GOLD, "Gold")]
+    MEMBERSHIP_CHOICES = [(MEMBERSHIP_BRONZE, "Bronze"),
+                          (MEMBERSHIP_SLIVER, "Sliver"), (MEMBERSHIP_GOLD, "Gold")]
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=32)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    membership = models.CharField(
+        max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
     # String representation for the customer model
     def __str__(self):
@@ -78,7 +83,8 @@ class Order(models.Model):
     PAYMENT_STATUS_CHOICES = [(PAYMENT_STATUS_PENDING, "Pending"), (PAYMENT_STATUS_COMPLETE, "Complete"),
                               (PAYMENT_STATUS_FAILED, "Failed")]
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
+    payment_status = models.CharField(
+        max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     # Set on-delete to protect in order to prevent deleting all the orders when customer is deleted
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
@@ -86,7 +92,8 @@ class Order(models.Model):
 class OrderItem(models.Model):
     """ Create OrderItem model and associate many-to-one relation with order and product models """
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name="orderitems")
     quantity = models.PositiveSmallIntegerField()
     # Set unit_price to calculate the price at the time of order to allow varied prices
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)

@@ -32,18 +32,18 @@ from decimal import Decimal
 #         return product.unit_price * Decimal(1.1)
 
 class CollectionSerializer(serializers.ModelSerializer):
-    """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in the model """
+    """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in  model """
     class Meta():
         model = Collection
         fields = ["id", "title"]
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in the model """
+    """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in  model """
     class Meta():
         model = Product
-        fields = ["id", "title", "unit_price",
-                  "collection", "product_with_tax"]
+        fields = ["id", "title", "description", "slug", "unit_price",
+                  "collection", "inventory", "product_with_tax"]
 
     # Add custom fields to serializer that are not defined in the model
     product_with_tax = serializers.SerializerMethodField(
@@ -51,3 +51,5 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product):
         return product.unit_price * Decimal(1.1)
+    
+    
