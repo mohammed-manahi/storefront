@@ -20,7 +20,7 @@ class Collection(models.Model):
 
 class Promotion(models.Model):
     """ Create Promotion model and associate many-to-many relation with product model """
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=255)
     discount = models.FloatField()
 
 
