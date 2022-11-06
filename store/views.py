@@ -279,7 +279,7 @@ class CollectionViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         # Override base implementation's delete method to apply custom delete logic
-        if Product.objects.filter(collection_id__isnull=False):
+        if Product.objects.filter(collection_id=kwargs['pk']):
             return Response({"error": "Collection has associated product(s)"},
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
