@@ -1,99 +1,98 @@
 <html lang="en">
-  <body>
-    <h1>Query Sets</h1>
-    <h3>There are {{ product_count }} products in the store.</h3>
-    <h3>All Products</h3>
-    <ul>
-      {% for product in products %}
-      <li>{{ product.title }} | {{ product.collection.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Recent Products</h3>
-    <ul>
-      {% for recent_product in recent_products %}
-      <li>{{ recent_product.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>
-      Products that their prices are greater than 20 and their category is
-      beauty:
-    </h3>
-    <ul>
-      {% for filtered_product in filtered_products %}
-      <li>{{ filtered_product.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Products that their price range between 50 and 60:</h3>
-    <ul>
-      {% for price_range in price_range_set %}
-      <li>{{ price_range.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>
-      Products which are either less than 10 in the inventory or their prices
-      are greater than 20:
-    </h3>
-    <ul>
-      {% for product_q_object in products_q_objects %}
-      <li>{{ product_q_object.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Highest price products by descending title order:</h3>
-    <ul>
-      {% for highest_product in highest_products %}
-      <li>{{ highest_product.title }} | {{ highest_product.unit_price }}$</li>
-      {% endfor %}
-    </ul>
-    <h3>Products certain fields:</h3>
-    <ul>
-      {% for product_certain_fields in products_certain_fields %}
-      <li>
-        {{ product_certain_fields.title }} | {{
-        product_certain_fields.collection.title }}
-      </li>
-      {% endfor %}
-    </ul>
-    <h3>Products that have been ordered:</h3>
-    <ul>
-      {% for ordered_product in ordered_products %}
-      <li>{{ ordered_product.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Products Categories:</h3>
-    <ul>
-      {% for product_category in product_categories %}
-      <li>{{ product_category.collection.title }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Product Promotions:</h3>
-    <ul>
-      {% for product_promotion in product_promotions %}
-      <li>
-        {{ product_promotion.title }} | {{ product_promotion.collection.title }}
-      </li>
-      {% endfor %}
-    </ul>
-    <h3>Last five orders:</h3>
-    <ul>
-      {% for last_order in last_orders %}
-      <li>
-        {{ last_order.product.title }} | {{ last_order.order.customer.last_name
-        }} {{ last_order.order.customer.first_name }} | {{
-        last_order.order.placed_at }}
-      </li>
-      {% endfor %}
-    </ul>
-    <h3>Customer full names:</h3>
-    <ul>
-      {% for customer_name in customer_full_names %}
-      <li>{{ customer_name.full_name }}</li>
-      {% endfor %}
-    </ul>
-    <h3>Top customers who made orders:</h3>
-    <ul>
-      {% for customer_order in customer_orders %}
-      <li>{{ customer_order.first_name }}</li>
-      {% endfor %}
-    </ul>
-  </body>
+<body>
+<h1>Query Sets</h1>
+<h3>There are {{ product_count }} products in the store.</h3>
+<h3>All Products</h3>
+<ul>
+    {% for product in products %}
+        <li>{{ product.title }} | {{ product.collection.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Recent Products</h3>
+<ul>
+    {% for recent_product in recent_products %}
+        <li>{{ recent_product.title }}</li>
+    {% endfor %}
+</ul>
+<h3>
+    Products that their prices are greater than 20 and their category is
+    beauty:
+</h3>
+<ul>
+    {% for filtered_product in filtered_products %}
+        <li>{{ filtered_product.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Products that their price range between 50 and 60:</h3>
+<ul>
+    {% for price_range in price_range_set %}
+        <li>{{ price_range.title }}</li>
+    {% endfor %}
+</ul>
+<h3>
+    Products which are either less than 10 in the inventory or their prices
+    are greater than 20:
+</h3>
+<ul>
+    {% for product_q_object in products_q_objects %}
+        <li>{{ product_q_object.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Highest price products by descending title order:</h3>
+<ul>
+    {% for highest_product in highest_products %}
+        <li>{{ highest_product.title }} | {{ highest_product.unit_price }}$</li>
+    {% endfor %}
+</ul>
+<h3>Products certain fields:</h3>
+<ul>
+    {% for product_certain_fields in products_certain_fields %}
+        <li>
+            {{ product_certain_fields.title }} | {{product_certain_fields.collection.title }}
+        </li>
+    {% endfor %}
+</ul>
+<h3>Products that have been ordered:</h3>
+<ul>
+    {% for ordered_product in ordered_products %}
+        <li>{{ ordered_product.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Products Categories:</h3>
+<ul>
+    {% for product_category in product_categories %}
+        <li>{{ product_category.collection.title }}</li>
+    {% endfor %}
+</ul>
+<h3>Product Promotions:</h3>
+<ul>
+    {% for product_promotion in product_promotions %}
+        <li>
+            {{ product_promotion.title }} | {{ product_promotion.collection.title }}
+        </li>
+    {% endfor %}
+</ul>
+<h3>Last five orders:</h3>
+<ul>
+    {% for last_order in last_orders %}
+        <li>
+            {{ last_order.product.title }}
+            | {{ last_order.order.customer.last_name }} {{ last_order.order.customer.first_name }} |
+            {last_order.order.placed_at }}
+        </li>
+    {% endfor %}
+</ul>
+<h3>Customer full names:</h3>
+<ul>
+    {% for customer_name in customer_full_names %}
+        <li>{{ customer_name.full_name }}</li>
+    {% endfor %}
+</ul>
+<h3>Top customers who made orders:</h3>
+<ul>
+    {% for customer_order in customer_orders %}
+        <li>{{ customer_order.first_name }}</li>
+    {% endfor %}
+</ul>
+</body>
 </html>
