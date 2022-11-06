@@ -13,5 +13,10 @@ urlpatterns = [
     path("products/<int:pk>", views.ProductDetail.as_view(), name="product-detail"),
 
     # path("collections/", views.collection_list, name="collections"),
+    # Use url routes for class-based products view instead of function-based
+    path("collections/", views.CollectionList.as_view(), name="collections"),
+
     # path("collections/<int:pk>", views.collection_detail, name="collection-detail")
+    # Use url routes for class-based products view instead of function-based
+    path("collections/<int:pk>", views.CollectionDetail.as_view(), name="collection-detail")
 ]

@@ -8,7 +8,7 @@ storefront
 |   Pipfile
 |   Pipfile.lock
 |   project_architecture.png
-|   requirments.txt
+|   requirements.txt
 |   seeder.sql
 |   
 +---.idea
@@ -22,6 +22,18 @@ storefront
 |   \---inspectionProfiles
 |           profiles_settings.xml
 |           
++---.vs
+|   |   ProjectSettings.json
+|   |   slnx.sqlite
+|   |   VSWorkspaceState.json
+|   |   
+|   \---storefront
+|       +---FileContentIndex
+|       |   |   c4b365b5-923d-483b-b4e4-ad1ffd438d1e.vsidx
+|       |   |   read.lock
+|       |   |   
+|       |   \---merges
+|       \---v17
 +---playground
 |   |   admin.py
 |   |   apps.py
@@ -38,11 +50,12 @@ storefront
 |           query_set.html
 |           
 +---store
-|   |   .gitignore
 |   |   admin.py
 |   |   apps.py
 |   |   models.py
+|   |   serializers.py
 |   |   tests.py
+|   |   urls.py
 |   |   views.py
 |   |   __init__.py
 |   |   
@@ -57,6 +70,8 @@ storefront
 |           0008_alter_order_placed_at.py
 |           0009_alter_product_unit_price.py
 |           0010_alter_product_promotions.py
+|           0011_alter_address_city_alter_address_street_and_more.py
+|           0012_alter_orderitem_product.py
 |           __init__.py
 |           
 +---storefront
