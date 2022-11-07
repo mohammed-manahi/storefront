@@ -1,4 +1,4 @@
-from store.models import Product, Collection
+from store.models import Product, Collection, Review
 from rest_framework import serializers
 from decimal import Decimal
 
@@ -59,3 +59,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product):
         return product.unit_price * Decimal(1.1)
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """ Create review serializer from review model """
+
+    class Meta():
+        model = Review
+        fields = ["id", "date", "name", "description"]
+
+    def create(self, validated_data):
+        # Override create implementation to allow nested reviews in products
+        product_id = self.context["product_id"]
+        # Get product id defined in the views and unpack other validated data
+        return Review.objects.create(product_id=product_id, **validated_data)

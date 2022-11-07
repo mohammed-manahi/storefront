@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from store.models import Product, Collection, OrderItem
-from store.serializers import ProductSerializer, CollectionSerializer
+from store.models import Product, Collection, OrderItem, Review
+from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -283,3 +283,20 @@ class CollectionViewSet(ModelViewSet):
             return Response({"error": "Collection has associated product(s)"},
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
+
+
+class ReviewViewSet(ModelViewSet):
+    """ Model view set for Review """
+
+    def get_queryset(self):
+        # Define reviews API query-set
+        # Apply query-set to show reviews on reviewed products only
+        return Review.objects.filter(product_id=self.kwargs["product_pk"])
+
+    def get_serializer_class(self):
+        # Define review API serializer
+        return ReviewSerializer
+
+    def get_serializer_context(self):
+        # Define review API context, use product pk to autopopulate product id in review post http method
+        return {"request": self.request, "product_id": self.kwargs["product_pk"]}
