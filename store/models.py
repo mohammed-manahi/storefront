@@ -118,3 +118,11 @@ class Address(models.Model):
     city = models.CharField(max_length=255)
     # Set one-to-many relationship with customer where customer can have multiple addresses
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
+
+class Review(models.Model):
+    """ Create Review model and associate many-to-one relation with product model """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
