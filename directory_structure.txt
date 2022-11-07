@@ -72,6 +72,8 @@ storefront
 |           0010_alter_product_promotions.py
 |           0011_alter_address_city_alter_address_street_and_more.py
 |           0012_alter_orderitem_product.py
+|           0013_alter_product_collection_alter_promotion_description.py
+|           0014_review.py
 |           __init__.py
 |           
 +---storefront
