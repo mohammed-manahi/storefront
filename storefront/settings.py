@@ -141,7 +141,12 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Modify decimal field in django rest framework to show as numeric data instead of string
+# Django rest framework configuration
 REST_FRAMEWORK = {
-    "COERCE_DECIMAL_TO_STRING": False
+    # Modify decimal field in django rest framework to show as numeric data instead of string
+    "COERCE_DECIMAL_TO_STRING": False,
+    # Apply global pagination for all end-points
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # Set pagination size per page
+    "PAGE_SIZE": 20
 }

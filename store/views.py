@@ -1,8 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review
-from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,7 +7,11 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from store.filters import ProductFilter
+from store.models import Product, Collection, OrderItem, Review
+from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -253,6 +254,10 @@ class ProductViewSet(ModelViewSet):
     search_fields = ["title", "description"]
     # Add sorting filter fields
     ordering_fields = ["unit_price", "last_update"]
+
+    # Blow code snippet is no longer needed since pagination is applied globally to all endpoints
+    # Add pagination for product list
+    # pagination_class = PageNumberPagination
 
     def get_queryset(self):
         # Define products API query-set and filter products based on their collections
