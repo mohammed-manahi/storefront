@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 from rest_framework.decorators import api_view
@@ -8,6 +9,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # @api_view(["GET", "POST"])
@@ -241,14 +243,23 @@ class ProductViewSet(ModelViewSet):
     """ Model view set for product provides more generic implementation which includes get, post, update,
         and delete together """
 
+    # Use django-filter library to apply generic back-end filtering
+    filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ["collection_id", "unit_price"]
+    # Use custom filter called filters defined in the store app to apply lt and gt for unit price
+    filterset_class = ProductFilter
+
     def get_queryset(self):
         # Define products API query-set and filter products based on their collections
-        products = Product.objects.all()
-        collection_id = self.request.query_params.get("collection_id")
-        if collection_id is not None:
-            # Update the query set if collection exists
-            products = products.filter(collection_id=collection_id)
-        return products
+        return Product.objects.all()
+
+        # Blow code snippet is no longer needed since django-filter library is applied
+        # products = Product.objects.all()
+        # collection_id = self.request.query_params.get("collection_id")
+        # if collection_id is not None:
+        #     # Update the query set if collection exists
+        #     products = products.filter(collection_id=collection_id)
+        # return products
 
     def get_serializer_class(self):
         # Define product API serializer
