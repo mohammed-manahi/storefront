@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -243,11 +244,15 @@ class ProductViewSet(ModelViewSet):
     """ Model view set for product provides more generic implementation which includes get, post, update,
         and delete together """
 
-    # Use django-filter library to apply generic back-end filtering
-    filter_backends = [DjangoFilterBackend]
+    # Use django-filter library to apply generic back-end filtering and search filter
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     # filterset_fields = ["collection_id", "unit_price"]
     # Use custom filter called filters defined in the store app to apply lt and gt for unit price
     filterset_class = ProductFilter
+    # Add search filter fields
+    search_fields = ["title", "description"]
+    # Add sorting filter fields
+    ordering_fields = ["unit_price", "last_update"]
 
     def get_queryset(self):
         # Define products API query-set and filter products based on their collections
