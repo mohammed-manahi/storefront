@@ -242,8 +242,13 @@ class ProductViewSet(ModelViewSet):
         and delete together """
 
     def get_queryset(self):
-        # Define products API query-set
-        return Product.objects.all()
+        # Define products API query-set and filter products based on their collections
+        products = Product.objects.all()
+        collection_id = self.request.query_params.get("collection_id")
+        if collection_id is not None:
+            # Update the query set if collection exists
+            products = products.filter(collection_id=collection_id)
+        return products
 
     def get_serializer_class(self):
         # Define product API serializer
