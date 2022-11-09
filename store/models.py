@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from uuid import uuid4
 
 
 class Collection(models.Model):
@@ -101,6 +102,8 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     """ Create Cart model """
+    # Change base id integer with globally unique identifier to protect accessing to the cart
+    id = models.UUIDField(primary_key=True, default=uuid4)
     # Auto_now_add populates only on creation
     created_at = models.DateTimeField(auto_now_add=True)
 
