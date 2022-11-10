@@ -5,13 +5,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.mixins import CreateModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review
-from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
+from store.models import Product, Collection, OrderItem, Review, Cart
+from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -260,7 +261,7 @@ class ProductViewSet(ModelViewSet):
     # pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        # Define products API query-set and filter products based on their collections
+        # Define product API query-set and filter products based on their collections
         return Product.objects.all()
 
         # Blow code snippet is no longer needed since django-filter library is applied
@@ -292,7 +293,7 @@ class CollectionViewSet(ModelViewSet):
         and delete together """
 
     def get_queryset(self):
-        # Define collections API query-set
+        # Define collection API query-set
         return Collection.objects.all()
 
     def get_serializer_class(self):
@@ -315,7 +316,7 @@ class ReviewViewSet(ModelViewSet):
     """ Model view set for Review """
 
     def get_queryset(self):
-        # Define reviews API query-set
+        # Define review API query-set
         # Apply query-set to show reviews on reviewed products only
         return Review.objects.filter(product_id=self.kwargs["product_pk"])
 
@@ -326,3 +327,19 @@ class ReviewViewSet(ModelViewSet):
     def get_serializer_context(self):
         # Define review API context, use product pk to autopopulate product id in review post http method
         return {"request": self.request, "product_id": self.kwargs["product_pk"]}
+
+
+class CartViewSet(CreateModelMixin, GenericViewSet):
+    """
+    Custom view set using create model mixin for cart because cart doesn't have list or update.
+    Cart should not implement list or update actions.
+    List and update features are available for cart items
+    """
+
+    def get_queryset(self):
+        # Define cart API query-set
+        return Cart.objects.all()
+
+    def get_serializer_class(self):
+        # Define cart API serializer
+        return CartSerializer
