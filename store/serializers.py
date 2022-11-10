@@ -1,4 +1,4 @@
-from store.models import Product, Collection, Review, Cart
+from store.models import Product, Collection, Review, Cart, CartItem
 from rest_framework import serializers
 from decimal import Decimal
 
@@ -75,12 +75,49 @@ class ReviewSerializer(serializers.ModelSerializer):
         return Review.objects.create(product_id=product_id, **validated_data)
 
 
+class SimpleRepresentationProductSerializer(serializers.ModelSerializer):
+    """
+    Create another product serializer from product model.
+    This serializer contains only three fields for simple representation to be used for cart item serializer
+    """
+
+    class Meta():
+        model = Product
+        fields = ["id", "title", "unit_price"]
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    """ Create cart item serializer from cart item model """
+
+    # Redefine product object to get all product details from simple representation product serializer
+    product = SimpleRepresentationProductSerializer()
+
+    class Meta():
+        model = CartItem
+        fields = ["id", "product", "quantity", "total_price"]
+
+    # Add custom fields to serializer that are not defined in the model
+    total_price = serializers.SerializerMethodField(method_name='calculate_total_price')
+
+    def calculate_total_price(self, cart_item):
+        return cart_item.quantity * cart_item.product.unit_price
+
+
 class CartSerializer(serializers.ModelSerializer):
     """ Create cart serializer from cart model """
 
     # Set id to read-only in order to only read it from backend to avoid post action from the client
     id = serializers.UUIDField(read_only=True)
+    # Cart serializer relationship with cart item serializer
+    items = CartItemSerializer(many=True)
 
     class Meta():
         model = Cart
-        fields = ["id"]
+        fields = ["id", "items", "total_price"]
+
+    # Add custom fields to serializer that are not defined in the model
+    total_price = serializers.SerializerMethodField(method_name='calculate_total_price')
+
+    def calculate_total_price(self, cart):
+        # Get the sum of all items in the cart
+        return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
