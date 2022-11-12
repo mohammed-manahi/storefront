@@ -11,16 +11,21 @@ router.register("carts", views.CartViewSet, basename="carts")
 # urlpatterns = router.urls
 
 
-# Set nested router using library drf-nested-routers
+# Set nested router using library drf-nested-routers for reviews in product
 product_router = routers.NestedDefaultRouter(router, "products", lookup="product")
 # Register child resources (nested routes)
-product_router.register('reviews', views.ReviewViewSet, basename='product-reviews')
+product_router.register('reviews', views.ReviewViewSet, basename="product-reviews")
+# Set nested router using library drf-nested-routers for cart items in cart
+cart_router = routers.NestedDefaultRouter(router, "carts", lookup="cart")
+# Register child resources (nested routes)
+cart_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 urlpatterns = [
     path("__debug__/", include('debug_toolbar.urls')),
     # Include view set routers and nested route
     path(r"", include(router.urls)),
     path(r"", include(product_router.urls)),
+    path(r"", include(cart_router.urls)),
 ]
 
 # urlpatterns = [

@@ -11,8 +11,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review, Cart
-from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer
+from store.models import Product, Collection, OrderItem, Review, Cart, CartItem
+from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
+    CartItemSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -343,3 +344,19 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     def get_serializer_class(self):
         # Define cart API serializer
         return CartSerializer
+
+
+class CartItemViewSet(ModelViewSet):
+    """ Model view set for cart item """
+
+    def get_queryset(self):
+        # Define cart item API query-set and filter by cart id because the endpoint is nested in routes
+        return CartItem.objects.filter(cart_id=self.kwargs["cart_pk"]).select_related("product").all()
+
+    def get_serializer_class(self):
+        # Define cart item API serializer
+        return CartItemSerializer
+
+    def get_serializer_context(self):
+        # Define cart item API context and set cart id because the endpoint is nested in routes
+        return {"request": self.request, "cart_id": self.kwargs["cart_pk"]}
