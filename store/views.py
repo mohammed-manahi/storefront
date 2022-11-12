@@ -8,7 +8,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart
@@ -329,7 +329,7 @@ class ReviewViewSet(ModelViewSet):
         return {"request": self.request, "product_id": self.kwargs["product_pk"]}
 
 
-class CartViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
     """
     Custom view set using create model mixin for cart because cart doesn't have list or update.
     Cart should not implement list or update actions.

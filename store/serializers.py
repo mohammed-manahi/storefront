@@ -108,8 +108,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     # Set id to read-only in order to only read it from backend to avoid post action from the client
     id = serializers.UUIDField(read_only=True)
-    # Cart serializer relationship with cart item serializer
-    items = CartItemSerializer(many=True)
+    # Cart serializer relationship with cart item serializer and set items to read-only
+    items = CartItemSerializer(many=True, read_only= True)
 
     class Meta():
         model = Cart
