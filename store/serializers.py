@@ -121,3 +121,41 @@ class CartSerializer(serializers.ModelSerializer):
     def calculate_total_price(self, cart):
         # Get the sum of all items in the cart
         return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
+
+
+class AddCartItemSerializer(serializers.ModelSerializer):
+    """
+    Custom serializer to add cart item because logically only product id and quantity need to be added when adding a
+    product to a cart. This implementation override base implementation where product title and unit price need to be
+    filled to add product to cart item
+    """
+    product_id = serializers.IntegerField()
+
+    class Meta():
+        model = CartItem
+        fields = ["id", "product_id", "quantity"]
+
+    def validate_product_id(self, value):
+        # Custom validation for product to prevent invalid product id by client
+        if not Product.objects.filter(pk=value).exists():
+            raise serializers.ValidationError("No product with given id not found")
+        return value
+
+    def save(self, **kwargs):
+        # Override default save method since add a product multiple times should increase the quantity not repeating id
+        product_id = self.validated_data["product_id"]
+        quantity = self.validated_data["quantity"]
+        # Read cart id using get serializer context defined in the views
+        cart_id = self.context["cart_id"]
+
+        # Define cart item using cart id and product id, if it doesn't exist create a new one
+        try:
+            cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product_id)
+            # Update existing cart item
+            cart_item.quantity += quantity
+            cart_item.save()
+            self.instance = cart_item
+        except CartItem.DoesNotExist:
+            # Create a new cart item by unpacking validated data (product id and quantity)
+            self.instance = CartItem.objects.create(cart_id=cart_id, **self.validated_data)
+        return self.instance

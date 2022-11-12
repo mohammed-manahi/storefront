@@ -13,7 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart, CartItem
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer
+    CartItemSerializer, AddCartItemSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -334,7 +334,7 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     """
     Custom view set using create model mixin for cart because cart doesn't have list or update.
     Cart should not implement list or update actions.
-    List and update features are available for cart items
+    List and update features are available for cart items and should not be implemented for cart itself.
     """
 
     def get_queryset(self):
@@ -354,7 +354,10 @@ class CartItemViewSet(ModelViewSet):
         return CartItem.objects.filter(cart_id=self.kwargs["cart_pk"]).select_related("product").all()
 
     def get_serializer_class(self):
-        # Define cart item API serializer
+        # Define cart item API serializer and apply custom cart item serializer if the request is post
+        if self.request.method == "POST":
+            # Reason for this is explained in add cart item serializer in serializers
+            return AddCartItemSerializer
         return CartItemSerializer
 
     def get_serializer_context(self):
