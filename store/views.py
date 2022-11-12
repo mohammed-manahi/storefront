@@ -350,6 +350,7 @@ class CartItemViewSet(ModelViewSet):
     """ Model view set for cart item """
 
     # Prevent put http method from allowed http method because only quantity field is updated using patch http method
+    # Note: method names should be in lower case
     http_method_names = ["get", "post", "patch", "delete"]
 
     def get_queryset(self):
