@@ -13,7 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart, CartItem
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItem
 
 
 # @api_view(["GET", "POST"])
@@ -349,6 +349,9 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
 class CartItemViewSet(ModelViewSet):
     """ Model view set for cart item """
 
+    # Prevent put http method from allowed http method because only quantity field is updated using patch http method
+    http_method_names = ["get", "post", "patch", "delete"]
+
     def get_queryset(self):
         # Define cart item API query-set and filter by cart id because the endpoint is nested in routes
         return CartItem.objects.filter(cart_id=self.kwargs["cart_pk"]).select_related("product").all()
@@ -358,6 +361,9 @@ class CartItemViewSet(ModelViewSet):
         if self.request.method == "POST":
             # Reason for this is explained in add cart item serializer in serializers
             return AddCartItemSerializer
+        elif self.request.method == "PATCH":
+            # Only patch http method is checked because only quantity field is updated
+            return UpdateCartItem
         return CartItemSerializer
 
     def get_serializer_context(self):

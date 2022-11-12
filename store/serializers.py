@@ -159,3 +159,15 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             # Create a new cart item by unpacking validated data (product id and quantity)
             self.instance = CartItem.objects.create(cart_id=cart_id, **self.validated_data)
         return self.instance
+
+
+class UpdateCartItem(serializers.ModelSerializer):
+    """
+    Custom serializer to update cart item because logically only the quantity need to be updated when
+    updating a product in a cart. This implementation override base implementation where product title and unit price
+    need to be filled to update product to cart item
+    """
+
+    class Meta():
+        model = CartItem
+        fields = ["quantity"]
