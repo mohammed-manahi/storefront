@@ -151,3 +151,6 @@ REST_FRAMEWORK = {
     # Set pagination size per page
     "PAGE_SIZE": 20
 }
+
+# Set extended user model in core app and apply it here in settings
+AUTH_USER_MODEL = "core.User"

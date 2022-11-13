@@ -10,30 +10,18 @@ storefront
 |   project_architecture.png
 |   requirements.txt
 |   seeder.sql
-|   
-+---.idea
-|   |   .gitignore
-|   |   misc.xml
-|   |   modules.xml
-|   |   storefront.iml
-|   |   vcs.xml
-|   |   workspace.xml
+|
++---core
+|   |   admin.py
+|   |   apps.py
+|   |   models.py
+|   |   tests.py
+|   |   views.py
+|   |   __init__.py
 |   |   
-|   \---inspectionProfiles
-|           profiles_settings.xml
+|   \---migrations
+|           __init__.py
 |           
-+---.vs
-|   |   ProjectSettings.json
-|   |   slnx.sqlite
-|   |   VSWorkspaceState.json
-|   |   
-|   \---storefront
-|       +---FileContentIndex
-|       |   |   c4b365b5-923d-483b-b4e4-ad1ffd438d1e.vsidx
-|       |   |   read.lock
-|       |   |   
-|       |   \---merges
-|       \---v17
 +---playground
 |   |   admin.py
 |   |   apps.py
@@ -52,6 +40,7 @@ storefront
 +---store
 |   |   admin.py
 |   |   apps.py
+|   |   filters.py
 |   |   models.py
 |   |   serializers.py
 |   |   tests.py
@@ -74,6 +63,9 @@ storefront
 |           0012_alter_orderitem_product.py
 |           0013_alter_product_collection_alter_promotion_description.py
 |           0014_review.py
+|           0015_alter_cart_id.py
+|           0016_alter_cart_id.py
+|           0017_alter_cartitem_cart_alter_cartitem_unique_together.py
 |           __init__.py
 |           
 +---storefront
@@ -88,17 +80,6 @@ storefront
 |           urls.cpython-310.pyc
 |           wsgi.cpython-310.pyc
 |           __init__.cpython-310.pyc
-|           
-+---store_custom
-|   |   admin.py
-|   |   apps.py
-|   |   models.py
-|   |   tests.py
-|   |   views.py
-|   |   __init__.py
-|   |   
-|   \---migrations
-|           __init__.py
 |           
 \---tags
     |   admin.py
