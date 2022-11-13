@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     "store",
     "tags",
     # The purpose of this app is to ensure decoupling and independence
-    "store_custom",
+    # The name is changed to core to perform use model customization
+    "core",
 ]
 
 MIDDLEWARE = [
