@@ -65,10 +65,11 @@ class CustomerAdmin(admin.ModelAdmin):
     """ Customer model registration for django admin """
     list_display = ["first_name", "last_name", "membership", "orders_count"]
     list_editable = ["membership"]
-    ordering = ["first_name", "last_name"]
+    ordering = ["user__first_name", "user__last_name"]
     list_per_page = 20
+    list_select_related = ["user"]
     # Add search fields with case-insensitive search for first name and last name
-    search_fields = ["first_name__istartswith", "last_name__istartswith"]
+    search_fields = ["user__first_name__istartswith", "user__last_name__istartswith"]
 
     # Display orders count's links and apply custom display ordering decorator
     @admin.display(ordering="orders_count")

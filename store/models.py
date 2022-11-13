@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from uuid import uuid4
+from django.conf import settings
+from django.contrib import admin
 
 
 class Collection(models.Model):
@@ -58,21 +60,36 @@ class Customer(models.Model):
     # Set choices for membership and use bronze membership as default
     MEMBERSHIP_CHOICES = [(MEMBERSHIP_BRONZE, "Bronze"),
                           (MEMBERSHIP_SLIVER, "Sliver"), (MEMBERSHIP_GOLD, "Gold")]
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    # The below fields are no longer needed since they are already defined in customized user model which is linked now
+    # first_name = models.CharField(max_length=255)
+    # last_name = models.CharField(max_length=255)
+    # email = models.EmailField(unique=True)
     phone = models.CharField(max_length=32)
     birth_date = models.DateField(null=True)
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    # Link customer with user model defined in settings after customization
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    @admin.display(ordering="user__first_name")
+    def first_name(self):
+        # Define first name after linking customer to user and use it in admin
+        return self.user.first_name
+
+    @admin.display(ordering="user__last_name")
+    def last_name(self):
+        # Define last name after linking customer to user and use it in admin
+        return self.user.last_name
 
     # String representation for the customer model
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        # Change first name and last name representations to user after linking customer to customized user model
+        return f"{self.user.first_name} {self.user.last_name}"
 
     # Meta inner class for customizing items in django admin ui
     class Meta():
-        ordering = ["first_name", "last_name"]
+        # Change first name and last name ordering to user after linking customer to customized user model
+        ordering = ["user__first_name", "user__last_name"]
 
 
 class Order(models.Model):
