@@ -165,3 +165,11 @@ SIMPLE_JWT = {
 
 # Set extended user model in core app and apply it here in settings
 AUTH_USER_MODEL = "core.User"
+
+# Set customized serializers that override djoser's base serializers
+DJOSER = {
+    "SERIALIZERS": {
+        # Default serializers are defined in https://djoser.readthedocs.io/
+        'user_create': 'core.serializers.UserCreateSerializer',
+    }
+}
