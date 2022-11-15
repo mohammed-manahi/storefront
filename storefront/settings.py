@@ -43,12 +43,13 @@ INSTALLED_APPS = [
     "django_filters",
     # Add django rest framework
     "rest_framework",
+    # Add djoser library for django api authentication
+    "djoser",
     "debug_toolbar",
     "playground",
     "store",
     "tags",
-    # The purpose of this app is to ensure decoupling and independence
-    # The name is changed to core to perform use model customization
+    # This app ensures decoupling and independence. The name is changed to core to perform use model customization
     "core",
 ]
 
@@ -149,7 +150,17 @@ REST_FRAMEWORK = {
     # Apply global pagination for all end-points
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     # Set pagination size per page
-    "PAGE_SIZE": 20
+    "PAGE_SIZE": 20,
+    # Add jwt authentication setting for json web token
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+}
+
+# Set simple jwt setting which decide the prefix "jwt" for the request header
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
 # Set extended user model in core app and apply it here in settings

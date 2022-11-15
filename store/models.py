@@ -106,6 +106,10 @@ class Order(models.Model):
     # Set on-delete to protect in order to prevent deleting all the orders when customer is deleted
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
+    class Meta():
+        # Create custom permission using a list of tuples which contains code name and description in auth permission
+        permissions = [("cancel_order", "Can cancel order")]
+
 
 class OrderItem(models.Model):
     """ Create OrderItem model and associate many-to-one relation with order and product models """
