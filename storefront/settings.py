@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -172,4 +173,10 @@ DJOSER = {
         # Default serializers are defined in https://djoser.readthedocs.io/
         'user_create': 'core.serializers.UserCreateSerializer',
     }
+}
+
+# Set customized settings for simple jwt library
+SIMPLE_JWT = {
+    # Change access token lifetime
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
 }
