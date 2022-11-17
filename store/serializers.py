@@ -1,4 +1,4 @@
-from store.models import Product, Collection, Review, Cart, CartItem
+from store.models import Product, Collection, Review, Cart, CartItem, Customer
 from rest_framework import serializers
 from decimal import Decimal
 
@@ -161,7 +161,7 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         return self.instance
 
 
-class UpdateCartItem(serializers.ModelSerializer):
+class UpdateCartItemSerializer(serializers.ModelSerializer):
     """
     Custom serializer to update cart item because logically only the quantity need to be updated when
     updating a product in a cart. This implementation override base implementation where product title and unit price
@@ -171,3 +171,14 @@ class UpdateCartItem(serializers.ModelSerializer):
     class Meta():
         model = CartItem
         fields = ["quantity"]
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    """ Create customer serializer from customer model """
+
+    # Define user id for create action
+    user_id = serializers.IntegerField()
+
+    class Meta():
+        model = Customer
+        fields = ["id", "user_id", "phone", "birth_date", "membership"]

@@ -8,12 +8,12 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review, Cart, CartItem
+from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer, UpdateCartItem
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -364,9 +364,29 @@ class CartItemViewSet(ModelViewSet):
             return AddCartItemSerializer
         elif self.request.method == "PATCH":
             # Only patch http method is checked because only quantity field is updated
-            return UpdateCartItem
+            return UpdateCartItemSerializer
         return CartItemSerializer
 
     def get_serializer_context(self):
         # Define cart item API context and set cart id because the endpoint is nested in routes
         return {"request": self.request, "cart_id": self.kwargs["cart_pk"]}
+
+
+class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+    """
+    Model view set for customer where list and delete actions should not be implemented here.
+    List and delete actions should be only in admin panel.
+    """
+
+
+    def get_queryset(self):
+        # Define customer  API query-set
+        Customer.objects.select_related("user").all()
+
+    def get_serializer_class(self):
+        # Define customer API serializer
+        return CustomerSerializer
+
+    def get_serializer_context(self):
+        # Define customer API context
+        return {"request": self.request}

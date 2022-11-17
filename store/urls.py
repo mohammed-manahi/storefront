@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 router.register("products", views.ProductViewSet, basename="products")
 router.register("collections", views.CollectionViewSet, basename="collections")
 router.register("carts", views.CartViewSet, basename="carts")
+router.register("customers", views.CustomerViewSet, basename="customers")
 # urlpatterns = router.urls
 
 
@@ -22,8 +23,9 @@ cart_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 urlpatterns = [
     path("__debug__/", include('debug_toolbar.urls')),
-    # Include view set routers and nested route
+    # Include view set routers
     path(r"", include(router.urls)),
+    # Include nested routers
     path(r"", include(product_router.urls)),
     path(r"", include(cart_router.urls)),
 ]
