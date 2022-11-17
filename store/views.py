@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer
@@ -378,7 +379,6 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     List and delete actions should be only in admin panel.
     """
 
-
     def get_queryset(self):
         # Define customer  API query-set
         Customer.objects.select_related("user").all()
@@ -390,3 +390,20 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     def get_serializer_context(self):
         # Define customer API context
         return {"request": self.request}
+
+    @action(detail=False, methods=["GET", "PUT"])
+    def me(self, request):
+        # Define a new action for getting current user's profile and set detail to false to show list not detail
+        # Handle user is not a customer by using get or create which returns a tuple of object and boolean if created
+        (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
+        if request.method == "GET":
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif request.method == "PUT":
+            serializer = CustomerSerializer(instance=customer, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

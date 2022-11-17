@@ -176,8 +176,8 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
     """ Create customer serializer from customer model """
 
-    # Define user id for create action
-    user_id = serializers.IntegerField()
+    # Define user id for create action and make user id read only so client can't change it
+    user_id = serializers.IntegerField(read_only=True)
 
     class Meta():
         model = Customer
