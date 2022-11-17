@@ -5,7 +5,6 @@ from django.utils.html import format_html, urlencode
 from store import models
 
 
-
 class ProductInventoryFilter(admin.SimpleListFilter):
     """ Create custom filter for product inventory """
     title = "inventory"

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
@@ -379,6 +380,15 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     List and delete actions should be only in admin panel.
     """
 
+    # Set permission for customers endpoint
+    # permission_classes = [IsAuthenticated]
+
+    # def get_permissions(self):
+    #     # Set permission based on http method. Note here we pass object of the permission
+    #     if self.request.method == "GET":
+    #         return [AllowAny()]
+    #     return [IsAuthenticated()]
+
     def get_queryset(self):
         # Define customer  API query-set
         Customer.objects.select_related("user").all()
@@ -406,4 +416,3 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
