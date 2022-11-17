@@ -159,24 +159,22 @@ REST_FRAMEWORK = {
 
 }
 
-# Set simple jwt setting which decide the prefix "jwt" for the request header
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-}
-
 # Set extended user model in core app and apply it here in settings
 AUTH_USER_MODEL = "core.User"
 
 # Set customized serializers that override djoser's base serializers
 DJOSER = {
     "SERIALIZERS": {
-        # Default serializers are defined in https://djoser.readthedocs.io/
+        # Override default serializers which are defined in https://djoser.readthedocs.io/
         'user_create': 'core.serializers.UserCreateSerializer',
+        'current_user': 'core.serializers.UserCreateSerializer',
     }
 }
 
 # Set customized settings for simple jwt library
 SIMPLE_JWT = {
+    # Set simple jwt setting which decide the prefix "jwt" for the request header
+    'AUTH_HEADER_TYPES': ('JWT',),
     # Change access token lifetime
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
 }
