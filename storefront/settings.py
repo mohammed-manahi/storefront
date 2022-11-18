@@ -153,8 +153,8 @@ REST_FRAMEWORK = {
     # Set pagination size per page
     "PAGE_SIZE": 20,
     # Add jwt authentication setting for json web token
-    "DEFAULT_AUTHENTICATION_CLASSES": ('rest_framework_simplejwt.authentication.JWTAuthentication',),
-    # "DEFAULT_PERMISSION_CLASSES": ('rest_framework.permissions.IsAuthenticated',),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 
 }
 
@@ -165,15 +165,15 @@ AUTH_USER_MODEL = "core.User"
 DJOSER = {
     "SERIALIZERS": {
         # Override default serializers which are defined in https://djoser.readthedocs.io/
-        'user_create': 'core.serializers.UserCreateSerializer',
-        'current_user': 'core.serializers.UserCreateSerializer',
+        "user_create": "core.serializers.UserCreateSerializer",
+        "current_user": "core.serializers.UserCreateSerializer",
     }
 }
 
 # Set customized settings for simple jwt library
 SIMPLE_JWT = {
     # Set simple jwt setting which decide the prefix "jwt" for the request header
-    'AUTH_HEADER_TYPES': ('JWT',),
+    "AUTH_HEADER_TYPES": ("JWT",),
     # Change access token lifetime
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1)
 }

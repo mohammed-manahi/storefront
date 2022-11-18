@@ -383,8 +383,9 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     List and delete actions should be only in admin panel.
     """
 
-    # Set permission for customers endpoint
+    # Set permission for customer's endpoint
     permission_classes = [IsAuthenticated]
+
 
     def get_permissions(self):
         # Set permission based on http method. Note here we pass object of the permission
@@ -393,8 +394,9 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
         return [IsAuthenticated()]
 
     def get_queryset(self):
-        # Define customer  API query-set
-        Customer.objects.select_related("user").all()
+        # Define customer API query-set
+        return Customer.objects.all()
+
 
     def get_serializer_class(self):
         # Define customer API serializer
@@ -403,6 +405,7 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     def get_serializer_context(self):
         # Define customer API context
         return {"request": self.request}
+
 
     @action(detail=False, methods=["GET", "PUT"])
     def me(self, request):
