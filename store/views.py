@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
@@ -14,6 +14,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer
+from store.permissions import IsAdminOrReadOnly
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
     CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer
 
@@ -259,8 +260,8 @@ class ProductViewSet(ModelViewSet):
     # Add sorting filter fields
     ordering_fields = ["unit_price", "last_update"]
 
-    # Set permission for customers endpoint
-    permission_classes = [IsAuthenticated]
+    # Set permission for product endpoint using custom permission defined in permissions.py
+    permission_classes = [IsAdminOrReadOnly]
 
     # Blow code snippet is no longer needed since pagination is applied globally to all endpoints
     # Add pagination for product list
@@ -297,6 +298,9 @@ class ProductViewSet(ModelViewSet):
 class CollectionViewSet(ModelViewSet):
     """ Model view set for collection provides more generic implementation which includes get, post, update,
         and delete together """
+
+    # Set permission for collection endpoint
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         # Define collection API query-set
@@ -377,26 +381,24 @@ class CartItemViewSet(ModelViewSet):
         return {"request": self.request, "cart_id": self.kwargs["cart_pk"]}
 
 
-class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class CustomerViewSet(ModelViewSet):
     """
     Model view set for customer where list and delete actions should not be implemented here.
     List and delete actions should be only in admin panel.
     """
 
-    # Set permission for customer's endpoint
-    permission_classes = [IsAuthenticated]
+    # Set permission for customer's endpoint, note that IsAdminUser is provided by django rest framework
+    permission_classes = [IsAdminUser]
 
-
-    def get_permissions(self):
-        # Set permission based on http method. Note here we pass object of the permission
-        if self.request.method == "GET":
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    # def get_permissions(self):
+    #     # Set permission based on http method. Note here we pass object of the permission
+    #     if self.request.method == "GET":
+    #         return [AllowAny()]
+    #     return [IsAuthenticated()]
 
     def get_queryset(self):
         # Define customer API query-set
         return Customer.objects.all()
-
 
     def get_serializer_class(self):
         # Define customer API serializer
@@ -406,8 +408,7 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
         # Define customer API context
         return {"request": self.request}
 
-
-    @action(detail=False, methods=["GET", "PUT"])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
         # Define a new action for getting current user's profile and set detail to false to show list not detail
         # Handle user is not a customer by using get or create which returns a tuple of object and boolean if created
