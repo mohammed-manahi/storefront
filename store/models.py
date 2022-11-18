@@ -90,6 +90,8 @@ class Customer(models.Model):
     class Meta():
         # Change first name and last name ordering to user after linking customer to customized user model
         ordering = ["user__first_name", "user__last_name"]
+        # Create custom model permission for view history action
+        permissions = [("view_history", "Can view history")]
 
 
 class Order(models.Model):
