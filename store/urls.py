@@ -24,10 +24,10 @@ cart_router.register('items', views.CartItemViewSet, basename='cart-items')
 urlpatterns = [
     path("__debug__/", include('debug_toolbar.urls')),
     # Include view set routers
-    path(r"", include(router.urls)),
+    path("", include(router.urls)),
     # Include nested routers
-    path(r"", include(product_router.urls)),
-    path(r"", include(cart_router.urls)),
+    path("", include(product_router.urls)),
+    path("", include(cart_router.urls)),
 ]
 
 # urlpatterns = [

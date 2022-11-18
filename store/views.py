@@ -259,6 +259,9 @@ class ProductViewSet(ModelViewSet):
     # Add sorting filter fields
     ordering_fields = ["unit_price", "last_update"]
 
+    # Set permission for customers endpoint
+    permission_classes = [IsAuthenticated]
+
     # Blow code snippet is no longer needed since pagination is applied globally to all endpoints
     # Add pagination for product list
     # pagination_class = PageNumberPagination
@@ -381,13 +384,13 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     """
 
     # Set permission for customers endpoint
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    # def get_permissions(self):
-    #     # Set permission based on http method. Note here we pass object of the permission
-    #     if self.request.method == "GET":
-    #         return [AllowAny()]
-    #     return [IsAuthenticated()]
+    def get_permissions(self):
+        # Set permission based on http method. Note here we pass object of the permission
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         # Define customer  API query-set

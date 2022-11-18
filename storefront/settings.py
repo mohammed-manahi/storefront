@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
     # Add jwt authentication setting for json web token
     "DEFAULT_AUTHENTICATION_CLASSES": ('rest_framework_simplejwt.authentication.JWTAuthentication',),
-    "DEFAULT_PERMISSION_CLASSES": ('rest_framework.permissions.IsAuthenticated',),
+    # "DEFAULT_PERMISSION_CLASSES": ('rest_framework.permissions.IsAuthenticated',),
 
 }
 
