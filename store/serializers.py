@@ -1,6 +1,9 @@
-from store.models import Product, Collection, Review, Cart, CartItem, Customer, Order, OrderItem
-from rest_framework import serializers
 from decimal import Decimal
+from django.db import transaction
+from rest_framework import serializers
+from store.models import Product, Collection, Review, Cart, CartItem, Customer, Order, OrderItem
+
+
 
 
 # class CollectionSerializer(serializers.Serializer):
@@ -203,3 +206,33 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta():
         model = Order
         fields = ["id", "customer", "payment_status", "placed_at", "items"]
+
+
+class CreateOrderSerializer(serializers.Serializer):
+    """
+    Custom serializer for order endpoint because creating an order requires cart id parameter.
+    Default order serializer uses customer, payment status and other parameters that won't be used to create an order.
+    The model serializer won't be used because cart id is not available in order model.
+    """
+
+    cart_id = serializers.UUIDField()
+
+    def save(self, **kwargs):
+        # Use transaction to ensure all the code will be applied together sicne multiple database operations are done
+        with transaction.atomic():
+            # Override save implementation since order is issued by cart id
+            # User id context is defined in the viewset of order
+            (customer, created) = Customer.objects.get_or_create(user_id=self.context["user_id"])
+            order = Order.objects.create(customer=customer)
+            cart_items = CartItem.objects.select_related("product").filter(cart_id=self.validated_data["cart_id"])
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=item.product,
+                    unit_price=item.product.unit_price,
+                    quantity=item.quantity
+                ) for item in cart_items
+            ]
+            OrderItem.objects.bulk_create(order_items)
+            # Delete cart after order is issued
+            Cart.objects.filter(pk=self.validated_data["cart_id"]).delete()

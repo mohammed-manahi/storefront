@@ -16,7 +16,8 @@ from store.filters import ProductFilter
 from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer, Order
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, \
+    CreateOrderSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -433,11 +434,22 @@ class CustomerViewSet(ModelViewSet):
 class OrderViewSet(ModelViewSet):
     " Model view set for order """
 
+    # Set permission classes for order viewset
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        return Order.objects.prefetch_related("items").all()
+        # Define order API query-set, where staff can view all orders and client can view only his/her own order
+        if self.request.user.is_staff:
+            return Order.objects.prefetch_related("items").all()
+        (customer_id, created) = Customer.objects.only("id").get_or_create(user_id=self.request.user.id)
+        return Order.objects.filter(customer_id=customer_id)
 
     def get_serializer_class(self):
+        # Define order API serializer
+        if self.request.method == "POST":
+            return CreateOrderSerializer
         return OrderSerializer
 
     def get_serializer_context(self):
-        return {"request": self.request}
+        # Define order API context
+        return {"request": self.request, "user_id": self.request.user.id}
