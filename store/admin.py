@@ -99,7 +99,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     # Get the customer name from the related object customer model
     def customer_name(self, order):
-        return f"{order.customer.first_name}, {order.customer.last_name}"
+        return f"{order.customer.user.first_name}, {order.customer.user.last_name}"
 
 
 @admin.register(models.Collection)

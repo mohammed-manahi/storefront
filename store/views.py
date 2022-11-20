@@ -13,10 +13,10 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyM
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer
+from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer, Order
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -348,7 +348,7 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
 
     def get_queryset(self):
         # Define cart API query-set and use eager load for items to fine-tune sql queries
-        return Cart.objects.prefetch_related("items__product").all()
+        return Cart.objects.select_related("customer").prefetch_related("orderitems").all()
 
     def get_serializer_class(self):
         # Define cart API serializer
@@ -428,3 +428,16 @@ class CustomerViewSet(ModelViewSet):
     def history(self, request, pk):
         # Define a new action based on custom model permission defined in customer model
         return Response("OK")
+
+
+class OrderViewSet(ModelViewSet):
+    " Model view set for order """
+
+    def get_queryset(self):
+        return Order.objects.prefetch_related("items").all()
+
+    def get_serializer_class(self):
+        return OrderSerializer
+
+    def get_serializer_context(self):
+        return {"request": self.request}
