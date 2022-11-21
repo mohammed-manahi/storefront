@@ -17,7 +17,7 @@ from store.models import Product, Collection, OrderItem, Review, Cart, CartItem,
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
     CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, \
-    CreateOrderSerializer
+    CreateOrderSerializer, UpdateOrderSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -413,7 +413,9 @@ class CustomerViewSet(ModelViewSet):
     def me(self, request):
         # Define a new action for getting current user's profile and set detail to false to show list not detail
         # Handle user is not a customer by using get or create which returns a tuple of object and boolean if created
-        (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
+        # The below code is no longer needed since a signal for customer creation creates a new user
+        # (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
+        customer = Customer.objects.get(user_id=request.user.id)
         if request.method == "GET":
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -435,7 +437,15 @@ class OrderViewSet(ModelViewSet):
     " Model view set for order """
 
     # Set permission classes for order viewset
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+
+    http_method_names = ["get", "patch", "delete", "head", "options"]
+
+    def get_permissions(self):
+        # Custom permission method to prevent client from performing put and delete http methods
+        if self.request.method in ["PATCH", "DELETE"]:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     def create(self, request, *args, **kwargs):
         # Override create to return order items instead of cart id
@@ -450,13 +460,17 @@ class OrderViewSet(ModelViewSet):
         # Define order API query-set, where staff can view all orders and client can view only his/her own order
         if self.request.user.is_staff:
             return Order.objects.prefetch_related("items").all()
-        (customer_id, created) = Customer.objects.only("id").get_or_create(user_id=self.request.user.id)
+        # The below code is no longer needed since a signal for customer creation creates a new user
+        # (customer_id, created) = Customer.objects.only("id").get_or_create(user_id=self.request.user.id)
+        customer_id = Customer.objects.only("id").get(user_id=self.request.user.id)
         return Order.objects.filter(customer_id=customer_id)
 
     def get_serializer_class(self):
         # Define order API serializer
         if self.request.method == "POST":
             return CreateOrderSerializer
+        if self.request.method == "PATCH":
+            return UpdateOrderSerializer
         return OrderSerializer
 
     def get_serializer_context(self):

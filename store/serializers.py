@@ -206,6 +206,14 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ["id", "customer", "payment_status", "placed_at", "items"]
 
 
+class UpdateOrderSerializer(serializers.ModelSerializer):
+    """ Custom serializer to update custom fields of the order """
+
+    class Meta():
+        model = Order
+        fields = ["payment_status"]
+
+
 class CreateOrderSerializer(serializers.Serializer):
     """
     Custom serializer for order endpoint because creating an order requires cart id parameter.
@@ -228,7 +236,9 @@ class CreateOrderSerializer(serializers.Serializer):
         with transaction.atomic():
             # Override save implementation since order is issued by cart id
             # User id context is defined in the viewset of order
-            (customer, created) = Customer.objects.get_or_create(user_id=self.context["user_id"])
+            # The below code is no longer needed since a signal for customer creation creates a new user
+            # (customer, created) = Customer.objects.get_or_create(user_id=self.context["user_id"])
+            customer = Customer.objects.get(user_id=self.context["user_id"])
             order = Order.objects.create(customer=customer)
             cart_items = CartItem.objects.select_related("product").filter(cart_id=self.validated_data["cart_id"])
             order_items = [
