@@ -4,8 +4,6 @@ from rest_framework import serializers
 from store.models import Product, Collection, Review, Cart, CartItem, Customer, Order, OrderItem
 
 
-
-
 # class CollectionSerializer(serializers.Serializer):
 #     """ Create collection serializer """
 #     id = serializers.IntegerField()
@@ -236,3 +234,5 @@ class CreateOrderSerializer(serializers.Serializer):
             OrderItem.objects.bulk_create(order_items)
             # Delete cart after order is issued
             Cart.objects.filter(pk=self.validated_data["cart_id"]).delete()
+
+            return order

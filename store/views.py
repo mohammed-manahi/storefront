@@ -437,6 +437,15 @@ class OrderViewSet(ModelViewSet):
     # Set permission classes for order viewset
     permission_classes = [IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        # Override create to return order items instead of cart id
+        serializer = CreateOrderSerializer(data=request.data, context={"user_id": self.request.user.id})
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        # order object is fetched from serializer to return order items
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+
     def get_queryset(self):
         # Define order API query-set, where staff can view all orders and client can view only his/her own order
         if self.request.user.is_staff:
