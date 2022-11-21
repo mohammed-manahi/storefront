@@ -7,4 +7,4 @@ class StoreConfig(AppConfig):
 
     def ready(self):
         # When the app is instantiated the signals are called
-        import store.signals
+        import store.signals.handlers

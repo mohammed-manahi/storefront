@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.db import transaction
 from rest_framework import serializers
 from store.models import Product, Collection, Review, Cart, CartItem, Customer, Order, OrderItem
-
+from store.signals import order_created
 
 # class CollectionSerializer(serializers.Serializer):
 #     """ Create collection serializer """
@@ -252,5 +252,8 @@ class CreateOrderSerializer(serializers.Serializer):
             OrderItem.objects.bulk_create(order_items)
             # Delete cart after order is issued
             Cart.objects.filter(pk=self.validated_data["cart_id"]).delete()
+
+            # Use custom signal for order creation
+            order_created.send_robust(self.__class__, order=order)
 
             return order
