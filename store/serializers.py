@@ -215,6 +215,14 @@ class CreateOrderSerializer(serializers.Serializer):
 
     cart_id = serializers.UUIDField()
 
+    def validate_cart_id(self, cart_id):
+        # Custom validation for cart id to ensure existence of cart id and the cart is not empty
+        if Cart.objects.filter(pk=cart_id).exists():
+            raise serializers.ValidationError("No cart with the given id was found")
+        if CartItem.objects.filter(cart_id=cart_id).count() == 0:
+            raise serializers.ValidationError("The cart is empty")
+        return cart_id
+
     def save(self, **kwargs):
         # Use transaction to ensure all the code will be applied together sicne multiple database operations are done
         with transaction.atomic():
