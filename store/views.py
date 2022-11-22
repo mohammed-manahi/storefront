@@ -13,11 +13,11 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyM
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
-from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer, Order
+from store.models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer, Order, ProductImage
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, \
     CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, \
-    CreateOrderSerializer, UpdateOrderSerializer
+    CreateOrderSerializer, UpdateOrderSerializer, ProductImageSerializer
 
 
 # @api_view(["GET", "POST"])
@@ -476,3 +476,19 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_context(self):
         # Define order API context
         return {"request": self.request, "user_id": self.request.user.id}
+
+
+class ProductImageViewSet(ModelViewSet):
+    " Model view set for product image """
+
+    def get_queryset(self):
+        # Define product image API query-set
+        return ProductImage.objects.filter(product_id=self.kwargs["product_pk"])
+
+    def get_serializer_class(self):
+        # Define product image API serializer
+        return ProductImageSerializer
+
+    def get_serializer_context(self):
+        # Define product image API context
+        return {"request": self.request, "product_id": self.kwargs["product_pk"]}
