@@ -20,6 +20,19 @@ class ProductInventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__gt=10)
 
 
+class ProductImageInline(admin.TabularInline):
+    """ Inline admin model for product admin """
+    model = models.ProductImage
+    # Display image thumbnails
+    readonly_fields = ["thumbnail"]
+
+    def thumbnail(self, instance):
+        # Custom method to display image thumbnails
+        if instance.image.name != "":
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
+        return ""
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product model registration for django admin """
@@ -37,6 +50,8 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ["title"]}
     # Add auto-complete field to the collection, note search field must be added to collection admin model
     autocomplete_fields = ["collection"]
+    # Use product image inline as an inline for product admin model
+    inlines = [ProductImageInline]
 
     # Add inline admin model from tagged item model in tags app using generic relation
     # inlines = [TagInline]
@@ -57,6 +72,10 @@ class ProductAdmin(admin.ModelAdmin):
     def clear_inventory(self, request, queryset):
         affected_product_count = queryset.update(inventory=0)
         self.message_user(request, f"{affected_product_count} products were updated successfully!")
+
+    class Media():
+        """ Media class can load styles and js files for admin """
+        css = {"all": ["store/style.css"]}
 
 
 @admin.register(models.Customer)
