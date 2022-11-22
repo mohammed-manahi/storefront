@@ -9,19 +9,64 @@ storefront
 |   Pipfile.lock
 |   project_architecture.png
 |   requirements.txt
-|   seeder.sql
-|
+|   
++---.idea
+|   |   .gitignore
+|   |   misc.xml
+|   |   modules.xml
+|   |   storefront.iml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   \---inspectionProfiles
+|           profiles_settings.xml
+|           
++---.vs
+|   |   ProjectSettings.json
+|   |   PythonSettings.json
+|   |   slnx.sqlite
+|   |   VSWorkspaceState.json
+|   |   
+|   \---storefront
+|       +---FileContentIndex
+|       |   |   29953ced-78d5-4d07-be6d-ff760ea9a687.vsidx
+|       |   |   9b33e3ad-62da-4201-86b8-d29e86008d41.vsidx
+|       |   |   read.lock
+|       |   |   
+|       |   \---merges
+|       \---v17
 +---core
 |   |   admin.py
 |   |   apps.py
 |   |   models.py
+|   |   serializers.py
 |   |   tests.py
 |   |   views.py
 |   |   __init__.py
 |   |   
-|   \---migrations
-|           __init__.py
+|   +---migrations
+|   |   |   0001_initial.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           0001_initial.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---signals
+|   |   |   handlers.py
+|   |   |   
+|   |   \---__pycache__
+|   |           handlers.cpython-310.pyc
+|   |           
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           apps.cpython-310.pyc
+|           models.cpython-310.pyc
+|           __init__.cpython-310.pyc
 |           
++---media
+|       sample.jpg
+|       
 +---playground
 |   |   admin.py
 |   |   apps.py
@@ -32,41 +77,108 @@ storefront
 |   |   __init__.py
 |   |   
 |   +---migrations
-|   |       __init__.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---templates
+|   |       query_set.html
 |   |       
-|   \---templates
-|           query_set.html
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           apps.cpython-310.pyc
+|           models.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           views.cpython-310.pyc
+|           __init__.cpython-310.pyc
 |           
 +---store
 |   |   admin.py
 |   |   apps.py
 |   |   filters.py
 |   |   models.py
+|   |   permissions.py
 |   |   serializers.py
 |   |   tests.py
 |   |   urls.py
 |   |   views.py
 |   |   __init__.py
 |   |   
-|   \---migrations
-|           0001_initial.py
-|           0002_product_slug.py
-|           0003_collection_featured_product.py
-|           0004_remove_promotion_featured_product_and_more.py
-|           0005_rename_price_product_unit_price.py
-|           0006_rename_created_at_order_placed_at.py
-|           0007_alter_collection_options_alter_customer_options_and_more.py
-|           0008_alter_order_placed_at.py
-|           0009_alter_product_unit_price.py
-|           0010_alter_product_promotions.py
-|           0011_alter_address_city_alter_address_street_and_more.py
-|           0012_alter_orderitem_product.py
-|           0013_alter_product_collection_alter_promotion_description.py
-|           0014_review.py
-|           0015_alter_cart_id.py
-|           0016_alter_cart_id.py
-|           0017_alter_cartitem_cart_alter_cartitem_unique_together.py
-|           __init__.py
+|   +---management
+|   |   \---commands
+|   |           seed.sql
+|   |           seed_db.py
+|   |           
+|   +---migrations
+|   |   |   0001_initial.py
+|   |   |   0002_product_slug.py
+|   |   |   0003_collection_featured_product.py
+|   |   |   0004_remove_promotion_featured_product_and_more.py
+|   |   |   0005_rename_price_product_unit_price.py
+|   |   |   0006_rename_created_at_order_placed_at.py
+|   |   |   0007_alter_collection_options_alter_customer_options_and_more.py
+|   |   |   0008_alter_order_placed_at.py
+|   |   |   0009_alter_product_unit_price.py
+|   |   |   0010_alter_product_promotions.py
+|   |   |   0011_alter_address_city_alter_address_street_and_more.py
+|   |   |   0012_alter_orderitem_product.py
+|   |   |   0013_alter_product_collection_alter_promotion_description.py
+|   |   |   0014_review.py
+|   |   |   0015_alter_cart_id.py
+|   |   |   0016_alter_cart_id.py
+|   |   |   0017_alter_cartitem_cart_alter_cartitem_unique_together.py
+|   |   |   0018_alter_cartitem_quantity.py
+|   |   |   0019_alter_customer_options_remove_customer_email_and_more.py
+|   |   |   0020_alter_order_options.py
+|   |   |   0021_alter_customer_options.py
+|   |   |   0022_alter_orderitem_order.py
+|   |   |   0023_productimage.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           0001_initial.cpython-310.pyc
+|   |           0002_product_slug.cpython-310.pyc
+|   |           0003_collection_featured_product.cpython-310.pyc
+|   |           0004_remove_promotion_featured_product_and_more.cpython-310.pyc
+|   |           0005_rename_price_product_unit_price.cpython-310.pyc
+|   |           0006_rename_created_at_order_placed_at.cpython-310.pyc
+|   |           0007_alter_collection_options_alter_customer_options_and_more.cpython-310.pyc
+|   |           0008_alter_order_placed_at.cpython-310.pyc
+|   |           0009_alter_product_unit_price.cpython-310.pyc
+|   |           0010_alter_product_promotions.cpython-310.pyc
+|   |           0011_alter_address_city_alter_address_street_and_more.cpython-310.pyc
+|   |           0012_alter_orderitem_product.cpython-310.pyc
+|   |           0013_alter_product_collection_alter_promotion_description.cpython-310.pyc
+|   |           0014_review.cpython-310.pyc
+|   |           0015_alter_cart_id.cpython-310.pyc
+|   |           0016_alter_cart_id.cpython-310.pyc
+|   |           0017_alter_cartitem_cart_alter_cartitem_unique_together.cpython-310.pyc
+|   |           0018_alter_cartitem_quantity.cpython-310.pyc
+|   |           0019_alter_customer_options_remove_customer_email_and_more.cpython-310.pyc
+|   |           0020_alter_order_options.cpython-310.pyc
+|   |           0021_alter_customer_options.cpython-310.pyc
+|   |           0022_alter_orderitem_order.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---signals
+|   |   |   handlers.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           handlers.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           apps.cpython-310.pyc
+|           filters.cpython-310.pyc
+|           models.cpython-310.pyc
+|           permissions.cpython-310.pyc
+|           serializers.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           views.cpython-310.pyc
+|           __init__.cpython-310.pyc
 |           
 +---storefront
 |   |   asgi.py
@@ -89,7 +201,17 @@ storefront
     |   views.py
     |   __init__.py
     |   
-    \---migrations
-            0001_initial.py
-            __init__.py
+    +---migrations
+    |   |   0001_initial.py
+    |   |   __init__.py
+    |   |   
+    |   \---__pycache__
+    |           0001_initial.cpython-310.pyc
+    |           __init__.cpython-310.pyc
+    |           
+    \---__pycache__
+            admin.cpython-310.pyc
+            apps.cpython-310.pyc
+            models.cpython-310.pyc
+            __init__.cpython-310.pyc
             

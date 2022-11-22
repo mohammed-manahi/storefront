@@ -52,6 +52,13 @@ class Product(models.Model):
         ordering = ["title"]
 
 
+class ProductImage(models.Model):
+    """ Create Product Image model """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    # Upload images to media/store/images in media root path
+    image = models.ImageField(upload_to="store/images")
+
+
 class Customer(models.Model):
     """ Create Customer model """
     MEMBERSHIP_BRONZE = "B"
