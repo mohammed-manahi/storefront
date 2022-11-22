@@ -270,7 +270,7 @@ class ProductViewSet(ModelViewSet):
 
     def get_queryset(self):
         # Define product API query-set and filter products based on their collections
-        return Product.objects.all()
+        return Product.objects.prefetch_related("images").all()
 
         # Blow code snippet is no longer needed since django-filter library is applied
         # products = Product.objects.all()

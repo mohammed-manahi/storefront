@@ -47,17 +47,32 @@ class CollectionSerializer(serializers.ModelSerializer):
         return collection.products.count()
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    """ Create product image serializer from product image model """
+
+    class Meta():
+        model = ProductImage
+        fields = ["id", "image"]
+
+    def create(self, validated_data):
+        # Override create implementation to allow nested images in products
+        product_id = self.context["product_id"]
+        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
+
 class ProductSerializer(serializers.ModelSerializer):
     """ Instead of redefining serializer's fields, model serializer can be used for fields already defined in  model """
 
     class Meta():
         model = Product
         fields = ["id", "title", "description", "slug", "unit_price",
-                  "collection", "inventory", "product_with_tax"]
+                  "collection", "inventory", "product_with_tax", "images"]
 
     # Add custom fields to serializer that are not defined in the model
-    product_with_tax = serializers.SerializerMethodField(
-        method_name='calculate_tax')
+    product_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
+
+    # Display product images
+    images = ProductImageSerializer(many=True, read_only=True)
 
     def calculate_tax(self, product):
         return product.unit_price * Decimal(1.1)
@@ -258,16 +273,3 @@ class CreateOrderSerializer(serializers.Serializer):
             order_created.send_robust(self.__class__, order=order)
 
             return order
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    """ Create product image serializer from product image model """
-
-    class Meta():
-        model = ProductImage
-        fields = ["id", "image"]
-
-    def create(self, validated_data):
-        # Override create implementation to allow nested images in products
-        product_id = self.context["product_id"]
-        return ProductImage.objects.create(product_id=product_id, **validated_data)
