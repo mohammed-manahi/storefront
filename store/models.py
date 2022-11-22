@@ -1,8 +1,10 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
 from uuid import uuid4
 from django.conf import settings
 from django.contrib import admin
+
+from store.validators import validate_image_size
 
 
 class Collection(models.Model):
@@ -55,8 +57,9 @@ class Product(models.Model):
 class ProductImage(models.Model):
     """ Create Product Image model """
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
-    # Upload images to media/store/images in media root path
-    image = models.ImageField(upload_to="store/images")
+    # Upload images to media/store/images in media root path and use custom validator defined in validators in store
+    image = models.ImageField(upload_to="store/images", validators=[validate_image_size, FileExtensionValidator(
+        allowed_extensions=["jpg", "jpeg", "png"])])
 
 
 class Customer(models.Model):
