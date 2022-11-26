@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv('SECRET_KEY'))
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -189,3 +189,14 @@ SIMPLE_JWT = {
     # Change access token lifetime
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1)
 }
+
+# Set smtp email backend's configuration
+EMAIL_BACKEND = str(os.getenv("EMAIL_BACKEND"))
+EMAIL_HOST = str(os.getenv("EMAIL_HOST"))
+EMAIL_HOST_USER = str(os.getenv("EMAIL_HOST_USER"))
+EMAIL_HOST_PASSWORD = str(os.getenv("EMAIL_HOST_PASSWORD"))
+EMAIL_PORT = str(os.getenv("EMAIL_PORT"))
+DEFAULT_FROM_EMAIL = str(os.getenv("DEFAULT_FROM_EMAIL"))
+
+# Define project admins in a list of tuples to enable mailing admins
+ADMINS = [(str(os.getenv("ADMIN_USER_NAME")), str(os.getenv("ADMIN_EMAIL")))]

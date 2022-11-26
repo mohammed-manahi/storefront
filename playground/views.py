@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
+from django.core.mail import send_mail, mail_admins, BadHeaderError
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
 
@@ -96,4 +97,27 @@ def query_sets(request):
                "min_price_in_beauty_collection": min_price_in_beauty_collection,
                "customer_full_names": customer_full_names, "customer_orders": customer_orders,
                "product_tags": product_tags}
+    return render(request, template, context)
+
+
+def send_email(request):
+    # Send emails via fake smtp server smtp4dev
+    try:
+        send_mail(subject="Subject", message="Message", from_email="admin@storefront.com",
+                  recipient_list=["mohammed@storefront.com"], fail_silently=False)
+    except BadHeaderError:
+        pass
+    template = "send_email.html"
+    context = {}
+    return render(request, template, context)
+
+
+def send_email_admins(request):
+    # Send email admins via fake smtp server smtp4dev
+    try:
+        mail_admins(subject="Subject", message="Message", html_message="HTML message")
+    except BadHeaderError:
+        pass
+    template = "send_email_admins.html"
+    context = {}
     return render(request, template, context)
