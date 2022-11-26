@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
-from django.core.mail import send_mail, mail_admins, BadHeaderError
+from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
 
@@ -119,5 +119,19 @@ def send_email_admins(request):
     except BadHeaderError:
         pass
     template = "send_email_admins.html"
+    context = {}
+    return render(request, template, context)
+
+
+def send_email_with_attachments(request):
+    # Send email with attachments using email message class
+    try:
+        email_message = EmailMessage(subject="Email with attachments", body="Body of email content",
+                                     from_email="admin@storefront.com", to=["mohammed@storefront.com"])
+        email_message.attach_file(path="playground/static/images/sample.jpg")
+        email_message.send()
+    except BadHeaderError:
+        pass
+    template = "send_email_with_attachments.html"
     context = {}
     return render(request, template, context)
