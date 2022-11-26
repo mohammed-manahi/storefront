@@ -137,6 +137,7 @@ def send_email_with_attachments(request):
     context = {}
     return render(request, template, context)
 
+
 def send_templated_email(request):
     # Send templated email using django templated email library
     try:
