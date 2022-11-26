@@ -4,6 +4,7 @@ from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
+from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
 
@@ -133,5 +134,16 @@ def send_email_with_attachments(request):
     except BadHeaderError:
         pass
     template = "send_email_with_attachments.html"
+    context = {}
+    return render(request, template, context)
+
+def send_templated_email(request):
+    # Send templated email using django templated email library
+    try:
+        email_message = BaseEmailMessage(template_name="emails/template.html", context={"name": "Admin"})
+        email_message.send(["mohammed@storefront.com"])
+    except BadHeaderError:
+        pass
+    template = "send_templated_email.html"
     context = {}
     return render(request, template, context)
