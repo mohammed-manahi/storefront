@@ -7,7 +7,7 @@ import pytest
 @pytest.mark.django_db
 class TestCreateCollection():
     """ Test cases for creating a collection for collections endpoint """
-
+    @pytest.mark.skip
     def test_if_user_is_anonymous_returns_401(self):
         # Test workflow consists of three parts arrange, act and assert actions
         # Arrange:
