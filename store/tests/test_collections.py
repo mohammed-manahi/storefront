@@ -1,8 +1,10 @@
 """ Test for collections endpoint where directory, file and method names are conventions """
 from django.contrib.auth.models import User
+from store.models import Collection
 from rest_framework.test import APIClient
 from rest_framework import status
 import pytest
+from model_bakery import baker
 
 
 @pytest.mark.django_db
@@ -58,3 +60,22 @@ class TestCreateCollection():
         # Assert:
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data["id"] > 0
+
+
+@pytest.mark.django_db
+class TestRetrieveCollection():
+    """ Test cases for retrieving a collection for collections endpoint """
+
+    def test_if_collection_exists_returns_200(self):
+        # Arrange:
+        # Collection.objects.create(title="new collection")
+        # Instead of creating model instance manually, model bakery provides a better approach
+        collection = baker.make(Collection)
+        # Act:
+        api_client = APIClient()
+        api_client.force_authenticate(user=User(is_staff=True))
+        # Get the id of the collection created by model bakery
+        response = api_client.get(f"/store/collections/{collection.id}/")
+        # Assert:
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {"id": collection.id, "title": collection.title, "product_count": 0}
