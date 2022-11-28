@@ -479,7 +479,7 @@ class OrderViewSet(ModelViewSet):
 
 
 class ProductImageViewSet(ModelViewSet):
-    " Model view set for product image """
+    """ Model view set for product image """
 
     def get_queryset(self):
         # Define product image API query-set
