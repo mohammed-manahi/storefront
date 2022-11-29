@@ -18,6 +18,7 @@ redis = "*"
 pytest-watch = "*"
 model-bakery = "*"
 django-silk = "*"
+django-redis = "*"
 
 [dev-packages]
 autopep8 = "*"

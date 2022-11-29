@@ -4,9 +4,11 @@ from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
+from django.core.cache import cache
 from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
+import requests
 
 
 def query_sets(request):
@@ -147,4 +149,16 @@ def send_templated_email(request):
         pass
     template = "send_templated_email.html"
     context = {}
+    return render(request, template, context)
+
+
+def delay_response(request):
+    # using low level caching using defined key in cache.get()
+    key = "httpbin_result"
+    if cache.get(key) is None:
+        response = requests.get("https://httpbin.org/delay/2")
+        data = response.json()
+        cache.set(key, data)
+    template = "delay_response.html"
+    context = {"cache": cache.get(key)}
     return render(request, template, context)

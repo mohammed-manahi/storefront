@@ -74,7 +74,6 @@ if DEBUG:
     # Add silk middleware for profiling the performance for dev environment only
     MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
 
-
 ROOT_URLCONF = "storefront.urls"
 
 TEMPLATES = [
@@ -205,3 +204,16 @@ DEFAULT_FROM_EMAIL = str(os.getenv("DEFAULT_FROM_EMAIL"))
 
 # Define project admins in a list of tuples to enable mailing admins
 ADMINS = [(str(os.getenv("ADMIN_USER_NAME")), str(os.getenv("ADMIN_EMAIL")))]
+
+# Set redis caching configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        # Set global 10 minutes for cache timeout
+        "TIMEOUT": 10*60,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}

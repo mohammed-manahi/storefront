@@ -30,8 +30,15 @@ class StorefrontUser(HttpUser):
         self.client.post(f"/store/carts/{self.cart_id}/items/", name="/store/carts/items",
                          json={"product_id": product_id, "quantity": 1})
 
+    @task
+    def delay_response(self):
+        self.client.get("/playground/delay-response/")
+
+
     def on_start(self):
         # Define on start method to get the initiated cart id and use it in add to cart task
         response = self.client.post("/store/carts/")
         result = response.json()
         self.cart_id = result["id"]
+
+
