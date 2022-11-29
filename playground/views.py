@@ -5,7 +5,9 @@ from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
 from django.core.cache import cache
+from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from rest_framework.views import APIView
 from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
@@ -168,3 +170,13 @@ def delay_response(request):
     context = {"data": data}
     return render(request, template, context)
 
+
+class ResponseView(APIView):
+    """ Implement caching for class-based views using method decorator """
+    @method_decorator(cache_page(5 * 60))
+    def get(self, request):
+        response = requests.get('https://httpbin.org/delay/3')
+        data = response.json()
+        template = "response.html"
+        context = {'data': data}
+        return render(request, template, context)

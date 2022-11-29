@@ -9,4 +9,5 @@ urlpatterns = [
     path("send-email-with-attachments/", views.send_email_with_attachments, name="send_email_with_attachments"),
     path("send-templated-email/", views.send_templated_email, name="send_templated_email"),
     path("delay-response/", views.delay_response, name="delay_response"),
+    path("response/", views.ResponseView.as_view(), name="response"),
 ]
