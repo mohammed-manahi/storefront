@@ -49,12 +49,13 @@ INSTALLED_APPS = [
     # Add djoser library for django api authentication
     "djoser",
     "debug_toolbar",
+    # Add silk app for profiling performance
+    "silk",
     "playground",
     "store",
     "tags",
     # This app ensures decoupling and independence. The name is changed to core to perform use model customization
-    "core",
-
+    "core"
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+if DEBUG:
+    # Add silk middleware for profiling the performance for dev environment only
+    MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
+
 
 ROOT_URLCONF = "storefront.urls"
 

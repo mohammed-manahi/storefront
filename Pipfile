@@ -17,12 +17,14 @@ django-templated-mail = "*"
 redis = "*"
 pytest-watch = "*"
 model-bakery = "*"
+django-silk = "*"
 
 [dev-packages]
 autopep8 = "*"
 pytest = "*"
 pytest-django = "*"
 locust = "*"
+django-silk = "*"
 
 [requires]
 python_version = "3.10"

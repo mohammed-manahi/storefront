@@ -38,3 +38,4 @@ urlpatterns = [
 if settings.DEBUG:
     # Set media url and root path for development environment
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
