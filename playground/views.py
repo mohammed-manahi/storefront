@@ -5,6 +5,7 @@ from django.db.models.aggregates import Avg, Max, Min, Count
 from django.db import transaction
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
 from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
@@ -152,13 +153,18 @@ def send_templated_email(request):
     return render(request, template, context)
 
 
+# Cache decorator instead of low-level caching
+@cache_page(5 * 60)
 def delay_response(request):
-    # using low level caching using defined key in cache.get()
-    key = "httpbin_result"
-    if cache.get(key) is None:
-        response = requests.get("https://httpbin.org/delay/2")
-        data = response.json()
-        cache.set(key, data)
+    # Use low level caching using defined key in cache.get()
+    # key = "httpbin_result"
+    # if cache.get(key) is None:
+    #     response = requests.get("https://httpbin.org/delay/2")
+    #     data = response.json()
+    #     cache.set(key, data)
+    response = requests.get("https://httpbin.org/delay/3")
+    data = response.json()
     template = "delay_response.html"
-    context = {"cache": cache.get(key)}
+    context = {"data": data}
     return render(request, template, context)
+
