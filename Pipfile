@@ -19,6 +19,7 @@ pytest-watch = "*"
 model-bakery = "*"
 django-silk = "*"
 django-redis = "*"
+whitenoise = "*"
 
 [dev-packages]
 autopep8 = "*"

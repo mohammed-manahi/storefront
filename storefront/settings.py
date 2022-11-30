@@ -62,6 +62,8 @@ MIDDLEWARE = [
     # Add cors headers to middleware list
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    # Add whitenoise middleware after security middleware to allow project serve it own static files
+    "whitenoise.middleware.WhiteNoiseMiddleware"
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
