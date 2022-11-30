@@ -33,6 +33,7 @@ gevent==22.10.2
 geventhttpclient==2.0.8
 gprof2dot==2022.7.29
 greenlet==2.0.1
+gunicorn==20.1.0
 idna==3.4
 iniconfig==1.1.1
 itsdangerous==2.1.2
