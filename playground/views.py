@@ -12,6 +12,10 @@ from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Collection, Promotion, Customer, Order
 from tags.models import TaggedItem
 import requests
+import logging
+
+# Set logger to playground.views
+logger = logging.getLogger(__name__)
 
 
 def query_sets(request):
@@ -156,7 +160,7 @@ def send_templated_email(request):
 
 
 # Cache decorator instead of low-level caching
-@cache_page(5 * 60)
+# @cache_page(5 * 60)
 def delay_response(request):
     # Use low level caching using defined key in cache.get()
     # key = "httpbin_result"
@@ -164,15 +168,23 @@ def delay_response(request):
     #     response = requests.get("https://httpbin.org/delay/2")
     #     data = response.json()
     #     cache.set(key, data)
-    response = requests.get("https://httpbin.org/delay/3")
-    data = response.json()
+    try:
+        # Use logger for sending and receiving requests
+        logger.info("Send request to httpbin")
+        response = requests.get("https://httpbin.org/delay/3")
+        logger.info("Receive response from httpbin")
+        data = response.json()
+    except requests.ConnectionError:
+        logger.critical("Failed to connect to to httpbin")
+
     template = "delay_response.html"
-    context = {"data": data}
+    context = {}
     return render(request, template, context)
 
 
 class ResponseView(APIView):
     """ Implement caching for class-based views using method decorator """
+
     @method_decorator(cache_page(5 * 60))
     def get(self, request):
         response = requests.get('https://httpbin.org/delay/3')

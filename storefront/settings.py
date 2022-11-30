@@ -63,7 +63,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     # Add whitenoise middleware after security middleware to allow project serve it own static files
-    "whitenoise.middleware.WhiteNoiseMiddleware"
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -217,6 +217,39 @@ CACHES = {
         "TIMEOUT": 10 * 60,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Set logging to track log history
+LOGGING = {
+    "version": 1,
+    # Allow other loggers to work alongside with this logger
+    "disable_existing_loggers": False,
+    "handlers": {
+        # Enable console and file logging
+        "console": {
+            "class": "logging.StreamHandler"
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "general.log",
+            # Use verbose formatter defined in formatters
+            "formatter": "verbose"
+        },
+    },
+    "loggers": {
+        # Empty string means all apps in the project
+        "": {
+            "handlers": ["console", "file"],
+            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO")
+        }
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} ({levelname}) - {name} - {message}",
+            # Use string.format style
+            "style": "{"
         }
     }
 }
