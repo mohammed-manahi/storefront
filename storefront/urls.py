@@ -25,11 +25,12 @@ admin.site.index_title = "Administration"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("__debug__/", include('debug_toolbar.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
+    path("", include("core.urls")),
     # Add djoser authentication library to project urls
-    path("auth/", include('djoser.urls')),
+    path("auth/", include("djoser.urls")),
     # Use djoser with jwt as a backend authentication
-    path("auth/", include('djoser.urls.jwt')),
+    path("auth/", include("djoser.urls.jwt")),
     path("playground/", include("playground.urls")),
     path("store/", include("store.urls")),
 

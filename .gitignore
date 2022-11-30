@@ -1,4 +1,7 @@
+*.pyc
 .env
 .vscode
 .idea
 .vs
+/.pytest_cache
+/static/

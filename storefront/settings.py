@@ -150,6 +150,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Set media url and root path by joining base directory of the project with media directory
 MEDIA_URL = "/media/"
@@ -211,7 +212,7 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/2",
         # Set global 10 minutes for cache timeout
-        "TIMEOUT": 10*60,
+        "TIMEOUT": 10 * 60,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
